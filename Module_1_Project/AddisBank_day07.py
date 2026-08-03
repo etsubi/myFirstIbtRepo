@@ -1,6 +1,6 @@
 class SMSAlert:
     def update(self, message):
-        print(f"SMS: {message}")
+        print(f"SMS Alert: {message}")
 
 
 class Account:
@@ -8,14 +8,16 @@ class Account:
         self.owner = owner
         self.number = number
         self._balance = balance
-        self.subscribers = []
-        self.history = []   
+        self.observers = []
+
+        # New Day 7: Stack for transaction history
+        self.history = []
 
     def subscribe(self, observer):
-        self.subscribers.append(observer)
+        self.observers.append(observer)
 
     def notify(self, message):
-        for observer in self.subscribers:
+        for observer in self.observers:
             observer.update(message)
 
     @property
@@ -25,7 +27,8 @@ class Account:
     def deposit(self, amount):
         self._balance += amount
 
-        self.history.append(f"Deposit: {amount} ETB")
+        # push transaction into stack
+        self.history.append(f"Deposited {amount} ETB")
 
         self.notify(f"{amount} ETB deposited")
 
@@ -36,39 +39,34 @@ class Account:
 
         self._balance -= amount
 
-        self.history.append(f"Withdraw: {amount} ETB")
+        # push transaction into stack
+        self.history.append(f"Withdrew {amount} ETB")
 
         self.notify(f"{amount} ETB withdrawn")
 
     def undo_last(self):
         if self.history:
-            transaction = self.history.pop()
-            print(f"Undo: {transaction}")
+            last = self.history.pop()
+            print(f"Undo: {last}")
         else:
-            print("No transactions")
+            print("No transactions to undo")
 
     def statement(self):
         print(f"""
 Owner: {self.owner}
 Account Number: {self.number}
-Balance: {self.balance} ETB
+Balance: {self._balance} ETB
 History: {self.history}
 """)
 
 
 class SavingsAccount(Account):
-    def __init__(self, owner, number, balance=0):
-        super().__init__(owner, number, balance)
-        self.rate = 0.05
-
     def add_interest(self):
-        self.deposit(self.balance * self.rate)
+        self.deposit(self._balance * 0.05)
 
 
 class CurrentAccount(Account):
-    def __init__(self, owner, number, balance=0):
-        super().__init__(owner, number, balance)
-        self.overdraft = 1000
+    pass
 
 
 class AccountFactory:
@@ -81,12 +79,11 @@ class AccountFactory:
         if kind == "current":
             return CurrentAccount(owner, number, balance)
 
-        raise ValueError("Unknown account type")
-
 
 class AccountRegistry:
+
     def __init__(self):
-        self.accounts = {}
+        self.accounts = {}   # account number -> account
 
     def add(self, account):
         self.accounts[account.number] = account
@@ -96,7 +93,6 @@ class AccountRegistry:
 
     def list_all(self):
         return self.accounts.values()
-
 
 account1 = AccountFactory.create(
     "savings",
@@ -130,6 +126,7 @@ account2.deposit(300)
 found_account = registry.find("CBE-1")
 
 found_account.statement()
+
 found_account.undo_last()
 
 found_account.statement()
