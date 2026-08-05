@@ -9,7 +9,7 @@ class Account:
         self.number = number
         self._balance = balance
         self.subscribers = []
-        self.history = []
+        self.history = []   
 
     def subscribe(self, observer):
         self.subscribers.append(observer)
@@ -24,7 +24,9 @@ class Account:
 
     def deposit(self, amount):
         self._balance += amount
-        self.history.append(f"Deposit {amount}")
+
+        self.history.append(f"Deposit: {amount} ETB")
+
         self.notify(f"{amount} ETB deposited")
 
     def withdraw(self, amount):
@@ -33,21 +35,41 @@ class Account:
             return
 
         self._balance -= amount
-        self.history.append(f"Withdraw {amount}")
+
+        self.history.append(f"Withdraw: {amount} ETB")
+
         self.notify(f"{amount} ETB withdrawn")
+
+    def undo_last(self):
+        if self.history:
+            transaction = self.history.pop()
+            print(f"Undo: {transaction}")
+        else:
+            print("No transactions")
 
     def statement(self):
         print(f"""
 Owner: {self.owner}
-Number: {self.number}
+Account Number: {self.number}
 Balance: {self.balance} ETB
 History: {self.history}
 """)
+
+
 class SavingsAccount(Account):
-    pass
+    def __init__(self, owner, number, balance=0):
+        super().__init__(owner, number, balance)
+        self.rate = 0.05
+
+    def add_interest(self):
+        self.deposit(self.balance * self.rate)
+
 
 class CurrentAccount(Account):
-    pass
+    def __init__(self, owner, number, balance=0):
+        super().__init__(owner, number, balance)
+        self.overdraft = 1000
+
 
 class AccountFactory:
     @staticmethod
@@ -63,7 +85,6 @@ class AccountFactory:
 
 
 class AccountRegistry:
-
     def __init__(self):
         self.accounts = {}
 
@@ -73,58 +94,8 @@ class AccountRegistry:
     def find(self, number):
         return self.accounts.get(number)
 
-
     def list_all(self):
-        return list(self.accounts.values())
-
-    def top_by_balance(self, n):
-
-        accounts = sorted(
-            self.accounts.values(),
-            key=lambda acc: acc.balance,
-            reverse=True
-        )
-
-        return accounts[:n]
-
-    def binary_search(self, numbers, target):
-
-        left = 0
-        right = len(numbers) - 1
-
-        while left <= right:
-
-            middle = (left + right) // 2
-
-            if numbers[middle] == target:
-                return middle
-
-            elif numbers[middle] < target:
-                left = middle + 1
-
-            else:
-                right = middle - 1
-
-        return -1
-
-
-    def find_by_number(self, number):
-
-        numbers = sorted(self.accounts.keys())
-
-        index = self.binary_search(numbers, number)
-
-        if index != -1:
-            return self.accounts[numbers[index]]
-
-        return None
-
-    def total_transactions(self, account, index=0):
-
-        if index == len(account.history):
-            return 0
-
-        return 1 + self.total_transactions(account, index + 1)
+        return self.accounts.values()
 
 
 account1 = AccountFactory.create(
@@ -141,40 +112,27 @@ account2 = AccountFactory.create(
     800
 )
 
-account3 = AccountFactory.create(
-    "savings",
-    "Sara",
-    "CBE-3",
-    3000
-)
-
 registry = AccountRegistry()
 
 registry.add(account1)
 registry.add(account2)
-registry.add(account3)
+
+sms = SMSAlert()
+
+account1.subscribe(sms)
+account2.subscribe(sms)
 
 account1.deposit(500)
 account1.withdraw(200)
 
 account2.deposit(300)
 
-account3.deposit(1000)
+found_account = registry.find("CBE-1")
 
-print("Top Accounts:")
+found_account.statement()
+found_account.undo_last()
 
-for account in registry.top_by_balance(2):
-    print(account.owner, account.balance)
+found_account.statement()
 
-found = registry.find_by_number("CBE-2")
-
-if found:
-    print("\nFound:")
-    found.statement()
-
-total = registry.total_transactions(account1)
-
-print(
-    "\nTotal transactions:",
-    total
-)
+for account in registry.list_all():
+    account.statement()
