@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="" method="post">
+      <label for="phone">Phone Number:</label>
+      <input
+        type="tel"
+        id="phone"
+        name="phone"
+        required
+        pattern="0(9|7)[0-9]{8}"
+        title="e.g. 0911234567"
+      />
+      <label for="amt">Amount (ETB)</label>
+      <input id="amt" name="amount" type="number" min="1000" />
+      <button type="submit">Top Up</button>
+      <fieldset>
+        <legend>Delivery Address</legend>
+        <label for="city">City</label>
+        <input id="city" name="city" value="Addis Ababa" />
+
+        <label for="area">Sub-city</label>
+        <input id="area" name="area" placeholder="Kazanchis" />
+      </fieldset>
+      <select name="bank">
+        <option value="cbe">Commercial Bank of Ethiopia</option>
+        <option value="awash">Awash Bank</option>
+        <option value="dashen">Dashen Bank</option>
+
+        <input type="radio" name="pay" value="telebirr" />
+        <input type="radio" name="pay" value="cbebirr" />
+        <input type="radio" name="pay" value="amole" />
+      </select>
+    </form>
+  </body>
+</html>
