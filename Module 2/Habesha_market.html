@@ -5,42 +5,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
-  <body>
-    <header>
-      <h1>Habesha Market</h1>
+  <link rel="stylesheet" href="styles.css" />
+  <!doctype html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-      <nav>
-        <a href="#">Home</a>
-        <a href="#">Products</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
-      </nav>
-    </header>
-    <main>
-      <section>
-        <h2>Products</h2>
+      <title>Habesha Eatery | Reservations</title>
 
-        <ul>
-          <li>Fresh Coffee</li>
-          <li>Teff Flour</li>
-          <li>Honey</li>
-          <li>Berbere Spice</li>
-        </ul>
-      </section>
+      <meta
+        name="description"
+        content="Reserve a table at Habesha Eatery and explore our Ethiopian menu."
+      />
 
-      <article>
-        <h2>About Habesha Market</h2>
+      <link rel="stylesheet" href="styles.css" />
+    </head>
 
-        <p>
-          <b>Habesha Market</b> offers fresh Ethiopian products, traditional
-          spices, coffee, and household goods. We are committed to providing
-          quality products to our customers.
-        </p>
-      </article>
-    </main>
+    <body>
+      <header>
+        <h1>Habesha Eatery</h1>
 
-    <footer>
-      <p>&copy; 2026 Habesha Market. All rights reserved.</p>
-    </footer>
-  </body>
+        <nav>
+          <a href="#home">Home</a>
+          <a href="#menu">Menu</a>
+          <a href="#reservation">Reservations</a>
+          <a href="#visit">Visit Us</a>
+        </nav>
+      </header>
+
+      <main>
+        <section id="home">
+          <h2>Welcome to Habesha Eatery</h2>
+
+          <p>
+            Enjoy traditional Ethiopian dishes made with fresh ingredients and
+            authentic flavors.
+          </p>
+        </section>
+
+        <section id="reservation">
+          <h2>Reserve a Table</h2>
+
+          <form>
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required />
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+
+            <label for="phone">Telephone</label>
+            <input type="tel" id="phone" name="phone" required />
+
+            <label for="date">Reservation Date</label>
+            <input type="date" id="date" name="date" required />
+
+            <label for="party-size">Party Size</label>
+            <input
+              type="number"
+              id="party-size"
+              name="party-size"
+              min="1"
+              required
+            />
+
+            <label for="special-requests"> Special Requests </label>
+
+            <textarea
+              id="special-requests"
+              name="special-requests"
+              rows="4"
+            ></textarea>
+
+            <button type="submit">Reserve Table</button>
+          </form>
+        </section>
+
+        <section id="menu">
+          <h2>Our Menu</h2>
+
+          <table>
+            <caption>
+              Habesha Eatery Menu
+            </caption>
+
+            <thead>
+              <tr>
+                <th scope="col">Dish</th>
+                <th scope="col">Description</th>
+                <th scope="col">Price (ETB)</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>Doro Wat</td>
+                <td>Spicy Ethiopian chicken stew served with injera.</td>
+                <td>450 ETB</td>
+              </tr>
+
+              <tr>
+                <td>Shiro</td>
+                <td>Seasoned chickpea stew served with injera.</td>
+                <td>250 ETB</td>
+              </tr>
+
+              <tr>
+                <td>Tibs</td>
+                <td>Sauteed beef with onions and Ethiopian spices.</td>
+                <td>400 ETB</td>
+              </tr>
+
+              <tr>
+                <td>Kitfo</td>
+                <td>Seasoned minced beef served with traditional sides.</td>
+                <td>500 ETB</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="visit">
+          <h2>Visit Us</h2>
+
+          <div>
+            <img
+              src="assets/dish.jpg"
+              alt="Traditional Ethiopian dish served with injera"
+            />
+
+            <!-- <iframe
+                    src="YOUR_PROVIDED_MAP_URL"
+                    title="Map showing the location of Habesha Eatery"
+                    width="600"
+                    height="450"
+                ></iframe> -->
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <p>&copy; 2026 Habesha Eatery. All rights reserved.</p>
+      </footer>
+    </body>
+  </html>
 </html>
