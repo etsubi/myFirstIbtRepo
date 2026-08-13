@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercise 1</title>
+
+    <style>
+      .highlight {
+        color: green;
+        background-color: lightyellow;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1 id="title">Old Title</h1>
+
+    <script>
+      const title = document.querySelector("#title");
+
+      title.textContent = "Welcome to Addis Market";
+
+      title.classList.toggle("highlight");
+    </script>
+  </body>
+</html>

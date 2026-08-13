@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercise 4</title>
+  </head>
+
+  <body>
+    <h1>Shopping List</h1>
+
+    <ul id="list">
+      <li>
+        Bread
+        <button class="delete">Delete</button>
+      </li>
+
+      <li>
+        Milk
+        <button class="delete">Delete</button>
+      </li>
+
+      <li>
+        Coffee
+        <button class="delete">Delete</button>
+      </li>
+    </ul>
+
+    <script>
+      const list = document.querySelector("#list");
+
+      list.addEventListener("click", function (event) {
+        if (event.target.matches(".delete")) {
+          const item = event.target.closest("li");
+
+          item.remove();
+        }
+      });
+    </script>
+  </body>
+</html>
