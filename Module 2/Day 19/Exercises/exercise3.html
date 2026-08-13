@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercise 3</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <button id="button">Click Me</button>
+    </div>
+
+    <script>
+      const container = document.querySelector("#container");
+      const button = document.querySelector("#button");
+
+      button.addEventListener("click", function (event) {
+        console.log("Button target:", event.target);
+      });
+
+      container.addEventListener("click", function (event) {
+        console.log("Container received the event");
+        console.log("Container listener target:", event.target);
+      });
+    </script>
+  </body>
+</html>

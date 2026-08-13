@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercise 2</title>
+  </head>
+
+  <body>
+    <h1>Ethiopian Cities</h1>
+
+    <ul id="city-list"></ul>
+
+    <script>
+      const cities = ["Addis Ababa", "Dire Dawa", "Gondar"];
+
+      const cityList = document.querySelector("#city-list");
+
+      cities.forEach(function (city) {
+        const li = document.createElement("li");
+
+        li.textContent = city;
+
+        cityList.append(li);
+      });
+    </script>
+  </body>
+</html>
