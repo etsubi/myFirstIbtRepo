@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Signup Form</title>
+  </head>
+
+  <body>
+    <main>
+      <h1>Signup Form</h1>
+
+      <p id="count">0 people have signed up.</p>
+
+      <form id="signupForm">
+        <div>
+          <label for="name"> Full Name </label>
+
+          <input id="name" type="text" name="name" />
+        </div>
+
+        <br />
+
+        <div>
+          <label for="phone"> Ethiopian Phone Number </label>
+
+          <input
+            id="phone"
+            type="tel"
+            name="phone"
+            placeholder="0911223344 or +251911223344"
+          />
+        </div>
+
+        <br />
+
+        <button type="submit">Sign Up</button>
+
+        <p id="error" aria-live="polite"></p>
+      </form>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
