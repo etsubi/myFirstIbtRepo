@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="description"
+      content="Qené Residences — a refined boutique hotel experience in Addis Ababa."
+    />
+
+    <title>Qené Residences | Addis Ababa</title>
+
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <header class="site-header">
+      <a href="#" class="logo">
+        <span class="logo-name">QENÉ</span>
+        <span class="logo-subtitle">RESIDENCES</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="#rooms" class="nav-link active">Rooms</a>
+        <a href="#stays" class="nav-link">My Stays</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- HERO -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-content">
+          <p class="eyebrow">✦ EST. 2026 · ADDIS ABABA ✦</p>
+
+          <h1 id="hero-title">
+            Where stillness
+            <span>finds its place.</span>
+          </h1>
+
+          <p class="hero-description">
+            Six rooms. Thoughtful design. An intimate stay shaped by Ethiopian
+            warmth and quiet luxury.
+          </p>
+
+          <a href="#rooms" class="hero-button"> Explore Rooms </a>
+        </div>
+      </section>
+
+      <!-- ROOMS -->
+      <section id="rooms" class="rooms-section" aria-labelledby="rooms-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">THE COLLECTION</p>
+
+            <h2 id="rooms-title">Find your room.</h2>
+          </div>
+
+          <p class="room-count">6 of 6</p>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="room-controls">
+          <div class="search-wrapper">
+            <label for="room-search"> Search rooms </label>
+
+            <input
+              type="search"
+              id="room-search"
+              placeholder="Tizita, Saba..."
+            />
+          </div>
+
+          <div class="category-wrapper">
+            <span class="filter-label"> Category </span>
+
+            <div class="category-buttons">
+              <button class="category-button active">All</button>
+
+              <button class="category-button">Standard</button>
+
+              <button class="category-button">Deluxe</button>
+
+              <button class="category-button">Suite</button>
+            </div>
+          </div>
+
+          <div class="price-wrapper">
+            <div class="price-heading">
+              <span>Max price</span>
+              <span>12,000 ETB / night</span>
+            </div>
+
+            <input
+              type="range"
+              min="4500"
+              max="12000"
+              value="12000"
+              id="price-filter"
+            />
+          </div>
+        </div>
+
+        <!-- ROOM CARDS -->
+        <div id="room-grid" class="room-grid" aria-live="polite">
+          <!-- JavaScript will render rooms here -->
+        </div>
+      </section>
+
+      <!-- MY STAYS -->
+      <section id="stays" class="stays-section" aria-labelledby="stays-title">
+        <div class="stays-content">
+          <p class="section-label">YOUR JOURNEY</p>
+
+          <h2 id="stays-title">My Stays</h2>
+
+          <p>Your reserved rooms will appear here.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <span class="footer-logo">QENÉ RESIDENCES</span>
+        <p>Addis Ababa · Ethiopia</p>
+      </div>
+
+      <p>© 2026 Qené Residences</p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
