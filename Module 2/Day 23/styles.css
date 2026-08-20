@@ -258,9 +258,6 @@ input {
 .price-wrapper input {
   width: 100%;
 }
-/* =========================
-   ROOM GRID
-========================= */
 
 .room-grid {
   display: grid;
@@ -338,9 +335,6 @@ input {
   text-transform: uppercase;
   font-size: 0.75rem;
 }
-/* =========================
-   DESKTOP
-========================= */
 
 @media (min-width: 768px) {
   .room-grid {
@@ -353,9 +347,6 @@ input {
     grid-template-columns: repeat(3, 1fr);
   }
 }
-/* =========================
-   MY STAYS
-========================= */
 
 .stays-section {
   width: min(var(--max-width), 92%);
@@ -381,10 +372,6 @@ input {
   color: var(--muted);
 }
 
-/* =========================
-   FOOTER
-========================= */
-
 .site-footer {
   margin-top: 5rem;
   padding: 2rem 5%;
@@ -406,10 +393,6 @@ input {
   letter-spacing: 0.12em;
   margin-bottom: 0.4rem;
 }
-
-/* =========================
-   MOBILE
-========================= */
 
 @media (max-width: 767px) {
   .site-header {
@@ -442,4 +425,36 @@ input {
     flex-direction: column;
     text-align: center;
   }
+}
+.booking-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.booking-item h4 {
+  margin-bottom: 0.2rem;
+  font-family: Georgia, serif;
+  font-weight: 400;
+}
+
+.booking-item small {
+  color: var(--muted);
+}
+
+.booking-total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 1.1rem;
+}
+
+.empty-booking {
+  color: var(--muted);
+  text-align: center;
+  padding: 1rem 0;
 }
