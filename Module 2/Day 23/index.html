@@ -86,7 +86,7 @@
           <div class="price-wrapper">
             <div class="price-heading">
               <span>Max price</span>
-              <span>12,000 ETB / night</span>
+              <span id="price-value">12,000 ETB / night</span>
             </div>
 
             <input
@@ -100,13 +100,6 @@
         </div>
 
         <div id="room-grid" class="room-grid" aria-live="polite"></div>
-
-            <div class="room-info">
-              <div class="room-top">
-                <span></span>
-                <span>Available</span>
-              </div>
-
       </section>
 
       <section id="stays" class="stays-section" aria-labelledby="stays-title">
@@ -115,7 +108,13 @@
 
           <h2 id="stays-title">My Stays</h2>
 
-          <p>Your reserved rooms will appear here.</p>
+          <div id="booking-list"></div>
+
+          <div class="booking-total">
+            <span>Total</span>
+            <strong id="total-price">0 ETB</strong>
+            <button class="remove-booking" data-id="...">Remove</button>
+          </div>
         </div>
       </section>
     </main>
