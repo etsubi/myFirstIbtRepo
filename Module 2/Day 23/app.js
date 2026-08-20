@@ -6,13 +6,24 @@ const state = {
   maxPrice: 12000,
 };
 
+// DOM Elements
 const roomGrid = document.querySelector("#room-grid");
 const searchInput = document.querySelector("#room-search");
-const priceValue = document.querySelector("#price-value");
 const categoryButtons = document.querySelectorAll(".category-button");
 const priceFilter = document.querySelector("#price-filter");
+const priceValue = document.querySelector("#price-value");
 const bookingList = document.querySelector("#booking-list");
 const totalPrice = document.querySelector("#total-price");
+
+// Local Storage
+function saveBookings() {
+  localStorage.setItem("bookings", JSON.stringify(state.booking));
+}
+
+function loadBookings() {
+  const saved = localStorage.getItem("bookings");
+  state.booking = saved ? JSON.parse(saved) : [];
+}
 
 // Load rooms from JSON file
 async function loadRooms() {
@@ -26,7 +37,6 @@ async function loadRooms() {
     }
 
     state.rooms = await response.json();
-
     render();
   } catch (error) {
     console.error(error);
@@ -55,10 +65,7 @@ function render() {
     .map(
       (room) => `
       <article class="room-card">
-        <img
-          src="${room.image}"
-          alt="${room.name}"
-        />
+        <img src="${room.image}" alt="${room.name}" />
 
         <div class="room-info">
           <div class="room-top">
@@ -103,6 +110,7 @@ function render() {
 
       state.booking.push(room);
 
+      saveBookings();
       renderBookings();
     });
   });
@@ -120,11 +128,11 @@ function renderBookings() {
     totalPrice.textContent = "0 ETB";
     return;
   }
+
   bookingList.innerHTML = state.booking
     .map(
       (room) => `
       <div class="booking-item">
-
         <div>
           <h4>${room.name}</h4>
           <small>${room.category}</small>
@@ -140,7 +148,7 @@ function renderBookings() {
             Remove
           </button>
         </div>
-        </div>
+      </div>
     `,
     )
     .join("");
@@ -149,13 +157,14 @@ function renderBookings() {
 
   totalPrice.textContent = `${total.toLocaleString()} ETB`;
 
-  // Remove buttons
+  // Remove Button
   document.querySelectorAll(".remove-booking").forEach((button) => {
     button.addEventListener("click", () => {
       const roomId = Number(button.dataset.id);
 
       state.booking = state.booking.filter((room) => room.id !== roomId);
 
+      saveBookings();
       renderBookings();
     });
   });
@@ -167,7 +176,7 @@ searchInput.addEventListener("input", (event) => {
   render();
 });
 
-// Catagory buttons event listeners
+// Category buttons event listeners
 categoryButtons.forEach((button) => {
   button.addEventListener("click", () => {
     state.category = button.textContent;
@@ -188,7 +197,7 @@ priceFilter.addEventListener("input", (event) => {
 
   render();
 });
-
-// start the app
+//Start the app
+loadBookings();
 renderBookings();
 loadRooms();
