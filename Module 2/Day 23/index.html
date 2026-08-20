@@ -113,8 +113,6 @@
           <div class="booking-total">
             <span>Total</span>
             <strong id="total-price">0 ETB</strong>
-            <button class="remove-booking" data-id="...">Remove</button>
-          </div>
         </div>
       </section>
     </main>
@@ -127,6 +125,98 @@
 
       <p>© 2026 Qené Residences</p>
     </footer>
+
+    <!-- Room Details Modal -->
+<div
+  id="room-modal"
+  class="room-modal"
+  aria-hidden="true"
+>
+  <div class="room-modal-content">
+
+    <button
+      id="modal-close"
+      class="modal-close"
+      aria-label="Close room details"
+    >
+      ×
+    </button>
+
+    <img
+      id="modal-image"
+      class="modal-image"
+      src=""
+      alt=""
+    />
+
+    <div class="modal-body">
+
+      <p id="modal-category" class="section-label"></p>
+
+      <h2 id="modal-name"></h2>
+
+      <p id="modal-description" class="modal-description"></p>
+
+      <div class="modal-price">
+        <strong id="modal-price"></strong>
+        <span>/ night</span>
+      </div>
+
+      <div class="modal-section">
+        <h3>Stay details</h3>
+
+        <div class="stay-options">
+
+          <div class="stay-option">
+            <label for="stay-nights">
+              Nights
+            </label>
+
+            <input
+              type="number"
+              id="stay-nights"
+              min="1"
+              value="1"
+            />
+          </div>
+
+          <div class="stay-option">
+            <label for="stay-guests">
+              Guests
+            </label>
+
+            <input
+              type="number"
+              id="stay-guests"
+              min="1"
+              value="1"
+            />
+          </div>
+
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <h3>Amenities</h3>
+
+        <div id="modal-amenities" class="amenities-list"></div>
+      </div>
+
+      <div class="modal-total">
+        <span>Estimated total</span>
+        <strong id="modal-total-price">0 ETB</strong>
+      </div>
+
+      <button
+        id="modal-reserve"
+        class="modal-reserve-button"
+      >
+        Confirm Reservation
+      </button>
+
+    </div>
+  </div>
+</div>
 
     <script src="app.js"></script>
   </body>

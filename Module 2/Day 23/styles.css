@@ -479,3 +479,317 @@ input {
   background: #8b3a3a;
   color: white;
 }
+.reserve-button.reserved {
+  background: #4f6b50;
+  color: #f1eadc;
+  cursor: default;
+}
+.empty-booking {
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.empty-booking p {
+  color: var(--cream);
+  margin-bottom: 0.4rem;
+}
+
+.empty-booking small {
+  color: var(--muted);
+}
+
+.booking-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.booking-item h4 {
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-bottom: 0.25rem;
+}
+
+.booking-item small {
+  color: var(--muted);
+}
+
+.booking-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.booking-right strong {
+  color: var(--cream);
+}
+
+.remove-booking {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 0.4rem 0.75rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.remove-booking:hover {
+  color: var(--cream);
+  border-color: var(--gold);
+}
+
+.booking-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1.25rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.booking-total strong {
+  color: var(--gold);
+  font-size: 1.2rem;
+}
+/* =========================
+   ROOM DETAILS MODAL
+========================= */
+
+.room-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1.5rem;
+
+  background: rgba(0, 0, 0, 0.8);
+
+  overflow-y: auto;
+}
+
+.room-modal.open {
+  display: flex;
+}
+
+.room-modal-content {
+  position: relative;
+
+  width: min(700px, 100%);
+
+  max-height: 90vh;
+  overflow-y: auto;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-close {
+  position: absolute;
+
+  top: 1rem;
+  right: 1rem;
+
+  z-index: 2;
+
+  width: 40px;
+  height: 40px;
+
+  border: 1px solid var(--border);
+  border-radius: 50%;
+
+  background: rgba(12, 12, 11, 0.8);
+  color: var(--cream);
+
+  font-size: 1.5rem;
+
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.modal-image {
+  width: 100%;
+  height: 320px;
+
+  object-fit: cover;
+  display: block;
+}
+
+.modal-body {
+  padding: 2rem;
+}
+
+.modal-body h2 {
+  font-family: Georgia, serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+
+  margin-bottom: 1rem;
+}
+
+.modal-description {
+  color: #b8b2a5;
+  margin-bottom: 1.5rem;
+}
+
+.modal-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+
+  margin-bottom: 2rem;
+}
+
+.modal-price strong {
+  color: var(--gold);
+  font-size: 1.4rem;
+}
+
+.modal-price span {
+  color: var(--muted);
+}
+
+.modal-section {
+  margin-top: 1.5rem;
+}
+
+.modal-section h3 {
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+
+  margin-bottom: 1rem;
+}
+
+.stay-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.stay-option label {
+  display: block;
+
+  color: var(--muted);
+
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.stay-option input {
+  width: 100%;
+
+  padding: 0.8rem;
+
+  background: #111;
+
+  border: 1px solid var(--border);
+
+  border-radius: 6px;
+
+  color: var(--cream);
+}
+
+.amenities-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.amenity {
+  padding: 0.5rem 0.8rem;
+
+  background: var(--surface-light);
+
+  border: 1px solid var(--border);
+
+  border-radius: 999px;
+
+  color: var(--muted);
+
+  font-size: 0.8rem;
+}
+
+.modal-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+
+  border-top: 1px solid var(--border);
+}
+
+.modal-total span {
+  color: var(--muted);
+}
+
+.modal-total strong {
+  color: var(--gold);
+  font-size: 1.4rem;
+}
+
+.modal-reserve-button {
+  width: 100%;
+
+  margin-top: 1.5rem;
+
+  padding: 1rem;
+
+  background: var(--gold);
+  color: #111;
+
+  border: none;
+  border-radius: 6px;
+
+  cursor: pointer;
+
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.modal-reserve-button:hover {
+  background: var(--gold-light);
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .room-modal {
+    padding: 0.75rem;
+  }
+
+  .modal-image {
+    height: 220px;
+  }
+
+  .modal-body {
+    padding: 1.25rem;
+  }
+
+  .modal-body h2 {
+    font-size: 2rem;
+  }
+
+  .stay-options {
+    grid-template-columns: 1fr;
+  }
+}
