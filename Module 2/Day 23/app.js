@@ -7,7 +7,10 @@ const state = {
 };
 
 const roomGrid = document.querySelector("#room-grid");
-
+const searchInput = document.querySelector("#room-search");
+const priceValue = document.querySelector("#price-value");
+const categoryButtons = document.querySelectorAll(".category-button");
+const priceFilter = document.querySelector("#price-filter");
 async function loadRooms() {
   roomGrid.textContent = "Loading rooms...";
 
@@ -26,61 +29,98 @@ async function loadRooms() {
     roomGrid.textContent = "Could not load rooms.";
   }
 }
-
 function render() {
-  const rooms = state.rooms;
+  const rooms = state.rooms.filter((room) => {
+    const searchTerm = state.search.toLowerCase();
+
+    const matchesSearch =
+      room.name.toLowerCase().includes(searchTerm) ||
+      room.category.toLowerCase().includes(searchTerm);
+
+    const matchesCategory =
+      state.category === "All" || room.category === state.category;
+
+    const matchesPrice = room.price <= state.maxPrice;
+
+    return matchesSearch && matchesCategory && matchesPrice;
+  });
 
   roomGrid.innerHTML = rooms
     .map(
       (room) => `
-    <article class="room-card">
+        <article class="room-card">
 
-      <img
-        src="${room.image}"
-        alt="${room.name} ${room.category} room"
-      />
+          <img
+            src="${room.image}"
+            alt="${room.name} ${room.category} room"
+          />
 
-      <div class="room-info">
+          <div class="room-info">
 
-        <div class="room-top">
-          <span>${room.category}</span>
-          <span>
-            ${room.available ? "Available" : "Unavailable"}
-          </span>
-        </div>
+            <div class="room-top">
+              <span>${room.category}</span>
 
-        <h3>${room.name}</h3>
+              <span>
+                ${room.available ? "Available" : "Unavailable"}
+              </span>
+            </div>
 
-        <p>
-          ${room.description}
-        </p>
+            <h3>${room.name}</h3>
 
-        <div class="room-bottom">
+            <p>${room.description}</p>
 
-          <div>
-            <strong>
-              ${room.price.toLocaleString()} ETB
-            </strong>
+            <div class="room-bottom">
 
-            <small>/ night</small>
+              <div>
+                <strong>
+                  ${room.price.toLocaleString()} ETB
+                </strong>
+
+                <small>/ night</small>
+              </div>
+
+              <button
+                class="reserve-button"
+                data-id="${room.id}"
+                ${!room.available ? "disabled" : ""}
+              >
+                Reserve
+              </button>
+
+            </div>
+
           </div>
 
-          <button
-            class="reserve-button"
-            data-id="${room.id}"
-            ${!room.available ? "disabled" : ""}
-          >
-            Reserve
-          </button>
-
-        </div>
-
-      </div>
-
-    </article>
-  `,
+        </article>
+      `,
     )
     .join("");
 }
+searchInput.addEventListener("input", (event) => {
+  state.search = event.target.value;
 
+  render();
+});
+
+categoryButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    state.category = button.textContent;
+
+    categoryButtons.forEach((btn) => {
+      btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    render();
+  });
+});
+
+priceFilter.addEventListener("input", (event) => {
+  state.maxPrice = Number(event.target.value);
+
+  priceValue.textContent = `${state.maxPrice.toLocaleString()} ETB / night`;
+
+  render();
+});
 loadRooms();
