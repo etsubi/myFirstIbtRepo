@@ -458,3 +458,24 @@ input {
   text-align: center;
   padding: 1rem 0;
 }
+.booking-right {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 0.5rem;
+}
+
+.remove-booking {
+  background: transparent;
+  border: 1px solid #8b3a3a;
+  color: #d97a7a;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.remove-booking:hover {
+  background: #8b3a3a;
+  color: white;
+}

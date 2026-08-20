@@ -120,27 +120,45 @@ function renderBookings() {
     totalPrice.textContent = "0 ETB";
     return;
   }
-
   bookingList.innerHTML = state.booking
     .map(
       (room) => `
       <div class="booking-item">
+
         <div>
           <h4>${room.name}</h4>
           <small>${room.category}</small>
         </div>
 
-        <strong>${room.price.toLocaleString()} ETB</strong>
-      </div>
+        <div class="booking-right">
+          <strong>${room.price.toLocaleString()} ETB</strong>
+
+          <button
+            class="remove-booking"
+            data-id="${room.id}"
+          >
+            Remove
+          </button>
+        </div>
+        </div>
     `,
     )
     .join("");
 
-  const total = state.booking.reduce((sum, room) => {
-    return sum + room.price;
-  }, 0);
+  const total = state.booking.reduce((sum, room) => sum + room.price, 0);
 
   totalPrice.textContent = `${total.toLocaleString()} ETB`;
+
+  // Remove buttons
+  document.querySelectorAll(".remove-booking").forEach((button) => {
+    button.addEventListener("click", () => {
+      const roomId = Number(button.dataset.id);
+
+      state.booking = state.booking.filter((room) => room.id !== roomId);
+
+      renderBookings();
+    });
+  });
 }
 
 // Search input event listener
