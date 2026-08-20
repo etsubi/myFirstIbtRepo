@@ -1,0 +1,75 @@
+[
+  {
+    "id": 1,
+    "name": "Tizita",
+    "category": "Standard",
+    "description": "A warm and intimate retreat inspired by Tizita, an Ethiopian expression of nostalgia and cherished memories.",
+    "price": 4500,
+    "capacity": 1,
+    "available": true,
+    "image": "images/tizita.jpg",
+    "amenities": ["King bed", "Wi-Fi", "Smart TV", "Breakfast"]
+  },
+  {
+    "id": 2,
+    "name": "Liya",
+    "category": "Standard",
+    "description": "A calm and refined room designed around simplicity, natural textures, and restful evenings.",
+    "price": 5500,
+    "capacity": 2,
+    "available": true,
+    "image": "images/liya.jpg",
+    "amenities": ["Queen bed", "Wi-Fi", "Smart TV", "Breakfast"]
+  },
+  {
+    "id": 3,
+    "name": "Saba",
+    "category": "Deluxe",
+    "description": "A sophisticated room inspired by the ancient heritage of Saba, blending timeless character with contemporary comfort.",
+    "price": 7000,
+    "capacity": 2,
+    "available": true,
+    "image": "images/saba.jpg",
+    "amenities": ["King bed", "Wi-Fi", "Mini bar", "Breakfast"]
+  },
+  {
+    "id": 4,
+    "name": "Zema",
+    "category": "Deluxe",
+    "description": "A serene room inspired by Zema, Ethiopia's distinctive musical tradition, created for guests who appreciate culture and quiet.",
+    "price": 8000,
+    "capacity": 2,
+    "available": true,
+    "image": "images/zema.jpg",
+    "amenities": ["King bed", "Wi-Fi", "Smart TV", "Mini bar"]
+  },
+  {
+    "id": 5,
+    "name": "Abyssinia",
+    "category": "Suite",
+    "description": "An expansive suite celebrating Ethiopia's historic identity as Abyssinia, with elegant furnishings and a private living area.",
+    "price": 10000,
+    "capacity": 3,
+    "available": true,
+    "image": "images/abyssinia.jpg",
+    "amenities": ["King bed", "Living room", "Wi-Fi", "Mini bar", "Breakfast"]
+  },
+  {
+    "id": 6,
+    "name": "Selam",
+    "category": "Suite",
+    "description": "A spacious sanctuary inspired by Selam, meaning peace and tranquility, designed for guests seeking a quiet escape.",
+    "price": 12000,
+    "capacity": 3,
+    "available": true,
+    "image": "images/selam.jpg",
+    "amenities": [
+      "King bed",
+      "Living room",
+      "Wi-Fi",
+      "Mini bar",
+      "Breakfast",
+      "City view"
+    ]
+  }
+]
