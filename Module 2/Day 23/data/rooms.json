@@ -7,7 +7,7 @@
     "price": 4500,
     "capacity": 1,
     "available": true,
-    "image": "images/tizita.jpg",
+    "image": "images/Tizita.jpg",
     "amenities": ["King bed", "Wi-Fi", "Smart TV", "Breakfast"]
   },
   {
@@ -18,7 +18,7 @@
     "price": 5500,
     "capacity": 2,
     "available": true,
-    "image": "images/liya.jpg",
+    "image": "images/Liya.jpg",
     "amenities": ["Queen bed", "Wi-Fi", "Smart TV", "Breakfast"]
   },
   {
@@ -51,7 +51,7 @@
     "price": 10000,
     "capacity": 3,
     "available": true,
-    "image": "images/abyssinia.jpg",
+    "image": "images/Abysinia.jpg",
     "amenities": ["King bed", "Living room", "Wi-Fi", "Mini bar", "Breakfast"]
   },
   {
@@ -62,7 +62,7 @@
     "price": 12000,
     "capacity": 3,
     "available": true,
-    "image": "images/selam.jpg",
+    "image": "images/selam.avif",
     "amenities": [
       "King bed",
       "Living room",

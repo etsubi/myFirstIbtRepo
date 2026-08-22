@@ -1,49 +1,114 @@
 const state = {
   rooms: [],
   booking: [],
+  reservations: [],
   search: "",
   category: "All",
   maxPrice: 12000,
 };
 
-// DOM Elements
+// CONSTANTS
+
+const STORAGE_KEY = "bookings";
+const RESERVATIONS_KEY = "reservations";
+
+const DEFAULT_NIGHTS = 1;
+const DEFAULT_GUESTS = 1;
+
+const MIN_NIGHTS = 1;
+const MIN_GUESTS = 1;
+
+const ROOM_DATA_URL = "data/rooms.json";
+
+// Ethiopian mobile: 09xxxxxxxx or +2519xxxxxxxx
+const PHONE = /^(?:\+251|0)9\d{8}$/;
+
+const NAME_PATTERN = /^[A-Za-zÀ-ÿ' -]+$/;
+
+// DOM ELEMENTS
+
 const roomGrid = document.querySelector("#room-grid");
+
 const searchInput = document.querySelector("#room-search");
+
 const categoryButtons = document.querySelectorAll(".category-button");
+
 const priceFilter = document.querySelector("#price-filter");
+
 const priceValue = document.querySelector("#price-value");
 
 const bookingList = document.querySelector("#booking-list");
+
 const totalPrice = document.querySelector("#total-price");
 
-// Room Modal Elements
 const roomModal = document.querySelector("#room-modal");
+
 const modalClose = document.querySelector("#modal-close");
+
 const modalImage = document.querySelector("#modal-image");
+
 const modalCategory = document.querySelector("#modal-category");
+
 const modalName = document.querySelector("#modal-name");
+
 const modalDescription = document.querySelector("#modal-description");
+
 const modalPrice = document.querySelector("#modal-price");
+
 const modalAmenities = document.querySelector("#modal-amenities");
 
 const stayNights = document.querySelector("#stay-nights");
+
 const stayGuests = document.querySelector("#stay-guests");
 
 const modalTotalPrice = document.querySelector("#modal-total-price");
+
 const modalReserve = document.querySelector("#modal-reserve");
+
+// CHECKOUT ELEMENTS
+
+const checkoutForm = document.querySelector("#checkout-form");
+
+const nameInput = document.querySelector("#guest-name");
+
+const phoneInput = document.querySelector("#guest-phone");
+
+const confirmation = document.querySelector("#confirmation");
 
 let selectedRoom = null;
 
-// Local Storage
+// Save current bookings to localStorage
+
 function saveBookings() {
-  localStorage.setItem("bookings", JSON.stringify(state.booking));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.booking));
 }
 
+// Save confirmed reservations to localStorage
+
+function saveReservations() {
+  localStorage.setItem(RESERVATIONS_KEY, JSON.stringify(state.reservations));
+}
+
+// Load bookings from localStorage
+
 function loadBookings() {
-  const saved = localStorage.getItem("bookings");
+  const saved = localStorage.getItem(STORAGE_KEY);
 
   try {
-    state.booking = saved ? JSON.parse(saved) : [];
+    const bookings = saved ? JSON.parse(saved) : [];
+
+    if (!Array.isArray(bookings)) {
+      state.booking = [];
+      return;
+    }
+
+    // Make sure older bookings still work
+
+    state.booking = bookings.map((booking) => ({
+      ...booking,
+      nights: booking.nights || DEFAULT_NIGHTS,
+      guests: booking.guests || DEFAULT_GUESTS,
+    }));
   } catch (error) {
     console.error("Could not load bookings:", error);
 
@@ -51,58 +116,129 @@ function loadBookings() {
   }
 }
 
+// Load confirmed reservations
+
+function loadReservations() {
+  const saved = localStorage.getItem(RESERVATIONS_KEY);
+
+  try {
+    const reservations = saved ? JSON.parse(saved) : [];
+
+    if (!Array.isArray(reservations)) {
+      state.reservations = [];
+      return;
+    }
+
+    state.reservations = reservations.map((reservation) => ({
+      ...reservation,
+      items: Array.isArray(reservation.items) ? reservation.items : [],
+    }));
+  } catch (error) {
+    console.error("Could not load reservations:", error);
+
+    state.reservations = [];
+  }
+}
+
 // Load rooms from JSON file
+
 async function loadRooms() {
   roomGrid.textContent = "Loading rooms...";
 
   try {
-    const response = await fetch("data/rooms.json");
+    const response = await fetch(ROOM_DATA_URL);
 
     if (!response.ok) {
       throw new Error("Could not load rooms");
     }
 
-    state.rooms = await response.json();
+    const rooms = await response.json();
+
+    if (!Array.isArray(rooms)) {
+      throw new Error("Room data is not valid");
+    }
+
+    state.rooms = rooms;
 
     render();
   } catch (error) {
-    console.error(error);
+    console.error("Could not load rooms:", error);
 
-    roomGrid.textContent = "Could not load rooms.";
+    roomGrid.innerHTML = `
+      <div class="empty-booking">
+        <p>Could not load rooms.</p>
+
+        <small>
+          Please try again later.
+        </small>
+      </div>
+    `;
   }
 }
 
-// Open room details modal
+// Find a room by its ID
+
+function findRoom(roomId) {
+  return state.rooms.find((room) => room.id === roomId);
+}
+
+// Check whether a room is already in the
+// current booking
+
+function isRoomBooked(roomId) {
+  return state.booking.some((booking) => booking.id === roomId);
+}
+
+// Format ETB prices consistently
+
+function formatPrice(amount) {
+  return `${Number(amount).toLocaleString()} ETB`;
+}
+
+// Calculate the total price for one booking
+
+function calculateBookingTotal(booking) {
+  const nights = Number(booking.nights) || DEFAULT_NIGHTS;
+
+  const price = Number(booking.price) || 0;
+
+  return price * nights;
+}
+
+// Calculate the total price of current bookings
+
+function calculateTotal() {
+  return state.booking.reduce((total, booking) => {
+    return total + calculateBookingTotal(booking);
+  }, 0);
+}
+
+// ROOM MODAL
+
+// Open room modal
+
 function openRoomModal(room) {
+  if (!room) return;
+
   selectedRoom = room;
 
   modalImage.src = room.image;
+
   modalImage.alt = `${room.name} ${room.category} room`;
 
   modalCategory.textContent = room.category;
+
   modalName.textContent = room.name;
+
   modalDescription.textContent = room.description;
 
-  modalPrice.textContent = `${room.price.toLocaleString()} ETB / night`;
+  modalPrice.textContent = formatPrice(room.price);
 
-  // Reset values when opening a new room
-  stayNights.value = 1;
-  stayGuests.value = 1;
+  stayNights.value = DEFAULT_NIGHTS;
 
-  // Set the maximum number of guests
-  // based on the room capacity from rooms.json
-  stayGuests.max = room.capacity;
+  stayGuests.value = DEFAULT_GUESTS;
 
-  // Show room amenities
-  modalAmenities.innerHTML = room.amenities
-    .map(
-      (amenity) => `
-        <span class="amenity">
-          ${amenity}
-        </span>
-      `,
-    )
-    .join("");
+  renderAmenities(room.amenities);
 
   updateModalTotal();
 
@@ -111,7 +247,22 @@ function openRoomModal(room) {
   roomModal.setAttribute("aria-hidden", "false");
 }
 
-// Close room details modal
+// Render room amenities
+
+function renderAmenities(amenities = []) {
+  modalAmenities.innerHTML = amenities
+    .map(
+      (amenity) => `
+          <span class="amenity">
+            ${amenity}
+          </span>
+        `,
+    )
+    .join("");
+}
+
+// Close room modal
+
 function closeRoomModal() {
   roomModal.classList.remove("open");
 
@@ -120,173 +271,258 @@ function closeRoomModal() {
   selectedRoom = null;
 }
 
-// Calculate modal total price
+// Update modal total
+
 function updateModalTotal() {
   if (!selectedRoom) return;
 
-  const nights = Number(stayNights.value) || 1;
+  const nights = Number(stayNights.value) || DEFAULT_NIGHTS;
 
   const total = selectedRoom.price * nights;
 
-  modalTotalPrice.textContent = `${total.toLocaleString()} ETB`;
+  modalTotalPrice.textContent = formatPrice(total);
 }
 
-// Render rooms based on filters
-function render() {
-  const rooms = state.rooms.filter((room) => {
-    const searchTerm = state.search.toLowerCase();
+// RENDER ROOMS
+// Get rooms that match the current filters
+
+function getFilteredRooms() {
+  const searchTerm = state.search.toLowerCase().trim();
+
+  return state.rooms.filter((room) => {
+    const roomName = room.name.toLowerCase();
+
+    const roomCategory = room.category.toLowerCase();
 
     const matchesSearch =
-      room.name.toLowerCase().includes(searchTerm) ||
-      room.category.toLowerCase().includes(searchTerm);
+      roomName.includes(searchTerm) || roomCategory.includes(searchTerm);
 
     const matchesCategory =
       state.category === "All" || room.category === state.category;
 
-    const matchesPrice = room.price <= state.maxPrice;
+    const matchesPrice = Number(room.price) <= state.maxPrice;
 
     return matchesSearch && matchesCategory && matchesPrice;
   });
+}
+
+// Render the room cards
+
+function renderRooms() {
+  const rooms = getFilteredRooms();
+
+  if (rooms.length === 0) {
+    roomGrid.innerHTML = `
+      <div class="empty-booking">
+        <p>No rooms found.</p>
+
+        <small>
+          Try changing your search or filters.
+        </small>
+      </div>
+    `;
+
+    return;
+  }
 
   roomGrid.innerHTML = rooms
     .map((room) => {
-      const isBooked = state.booking.some((booked) => booked.id === room.id);
+      const booked = isRoomBooked(room.id);
+
+      const unavailable = !room.available;
 
       return `
-        <article
-          class="room-card"
-          data-id="${room.id}"
-        >
+          <article
+            class="room-card"
+            data-id="${room.id}"
+          >
 
-          <img
-            src="${room.image}"
-            alt="${room.name} ${room.category} room"
-          />
+            <img
+              src="${room.image}"
+              alt="${room.name}"
+            />
 
-          <div class="room-info">
+            <div class="room-info">
 
-            <div class="room-top">
+              <div class="room-top">
 
-              <span>
-                ${room.category}
-              </span>
+                <span>
+                  ${room.category}
+                </span>
 
-              <span>
-                ${room.available ? "Available" : "Unavailable"}
-              </span>
-
-            </div>
-
-            <h3>
-              ${room.name}
-            </h3>
-
-            <p>
-              ${room.description}
-            </p>
-
-            <div class="room-bottom">
-
-              <div>
-
-                <strong>
-                  ${room.price.toLocaleString()} ETB
-                </strong>
-
-                <small>
-                  / night
-                </small>
+                <span>
+                  ${room.available ? "Available" : "Unavailable"}
+                </span>
 
               </div>
 
-              <button
-                class="reserve-button ${isBooked ? "reserved" : ""}"
-                data-id="${room.id}"
-                ${!room.available || isBooked ? "disabled" : ""}
-              >
-                ${isBooked ? "Reserved ✓" : "Reserve"}
-              </button>
+              <h3>
+                ${room.name}
+              </h3>
+
+              <p>
+                ${room.description}
+              </p>
+
+              <div class="room-bottom">
+
+                <div>
+
+                  <strong>
+                    ${formatPrice(room.price)}
+                  </strong>
+
+                  <small>
+                    / night
+                  </small>
+
+                </div>
+
+                <button
+                  type="button"
+                  class="reserve-button ${booked ? "reserved" : ""}"
+                  data-id="${room.id}"
+                  ${unavailable || booked ? "disabled" : ""}
+                >
+                  ${booked ? "Reserved ✓" : "Reserve"}
+                </button>
+
+              </div>
 
             </div>
 
-          </div>
-
-        </article>
-      `;
+          </article>
+        `;
     })
     .join("");
+}
 
-  // Reserve button event listeners
-  document.querySelectorAll(".reserve-button").forEach((button) => {
-    button.addEventListener("click", (event) => {
-      // Stop the room card from opening
-      // the modal when Reserve is clicked
-      event.stopPropagation();
+// ROOM EVENTS
+// Attach events to room cards and reserve buttons
 
-      const roomId = Number(button.dataset.id);
-
-      const room = state.rooms.find((r) => r.id === roomId);
-
-      if (!room) return;
-
-      const alreadyBooked = state.booking.some((r) => r.id === roomId);
-
-      if (alreadyBooked) return;
-
-      // Add room to booking
-      state.booking.push({
-        ...room,
-        nights: 1,
-        guests: 1,
-        total: room.price,
-      });
-
-      saveBookings();
-
-      render();
-
-      renderBookings();
-
-      // Let the user immediately see
-      // that the room was added
-      document.querySelector("#stays").scrollIntoView({
-        behavior: "smooth",
-      });
-    });
-  });
-
-  // Room card click event listeners
+function attachRoomEvents() {
   document.querySelectorAll(".room-card").forEach((card) => {
     card.addEventListener("click", (event) => {
-      // Do not open the modal when
-      // the Reserve button is clicked
+      // Don't open the modal when clicking
+      // the Reserve button
+
       if (event.target.closest(".reserve-button")) {
         return;
       }
 
       const roomId = Number(card.dataset.id);
 
-      const room = state.rooms.find((r) => r.id === roomId);
+      const room = findRoom(roomId);
 
-      if (!room) return;
+      if (room && room.available) {
+        openRoomModal(room);
+      }
+    });
+  });
+
+  // Reserve button event listeners
+
+  document.querySelectorAll(".reserve-button").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+
+      const roomId = Number(button.dataset.id);
+
+      const room = findRoom(roomId);
+
+      if (!room || isRoomBooked(roomId)) {
+        return;
+      }
 
       openRoomModal(room);
     });
   });
 }
 
-// Render bookings
+// MAIN RENDER
+
+// Render the complete app
+
+function render() {
+  renderRooms();
+  renderBookings();
+  attachRoomEvents();
+}
+
+// CONFIRM RESERVATION
+// Confirm reservation from modal
+
+function confirmReservation() {
+  if (!selectedRoom) return;
+
+  const nights = Number(stayNights.value);
+
+  const guests = Number(stayGuests.value);
+
+  // Prevent invalid values
+
+  if (
+    !Number.isFinite(nights) ||
+    !Number.isFinite(guests) ||
+    nights < MIN_NIGHTS ||
+    guests < MIN_GUESTS
+  ) {
+    return;
+  }
+
+  // Prevent duplicate reservations
+
+  if (isRoomBooked(selectedRoom.id)) {
+    closeRoomModal();
+
+    return;
+  }
+
+  const booking = {
+    ...selectedRoom,
+    nights,
+    guests,
+  };
+
+  state.booking.push(booking);
+
+  saveBookings();
+
+  render();
+
+  renderBookings();
+
+  closeRoomModal();
+
+  // Scroll to My Stays so the user can
+  // immediately see the reservation
+
+  document.querySelector("#stays")?.scrollIntoView({
+    behavior: "smooth",
+  });
+}
+
+// RENDER BOOKINGS
+
+// Render current bookings and
+// confirmed reservation history
+
 function renderBookings() {
-  if (state.booking.length === 0) {
+  const hasCurrentBookings = state.booking.length > 0;
+
+  const hasReservations = state.reservations.length > 0;
+
+  if (!hasCurrentBookings && !hasReservations) {
     bookingList.innerHTML = `
       <div class="empty-booking">
 
         <p>
-          No rooms reserved yet.
+          No stays yet.
         </p>
 
         <small>
-          Your reserved rooms will appear here.
+          Your current and confirmed
+          reservations will appear here.
         </small>
 
       </div>
@@ -297,60 +533,171 @@ function renderBookings() {
     return;
   }
 
-  bookingList.innerHTML = state.booking
-    .map((room) => {
-      const nights = room.nights || 1;
+  let html = "";
 
-      const total = room.total || room.price * nights;
+  // CURRENT BOOKINGS
 
-      return `
-          <div class="booking-item">
+  if (hasCurrentBookings) {
+    html += `
+      <div class="stay-group">
 
-            <div>
+        <p class="section-label">
+          CURRENT RESERVATION
+        </p>
+    `;
 
-              <h4>
-                ${room.name}
-              </h4>
+    state.booking.forEach((room) => {
+      const nights = Number(room.nights) || DEFAULT_NIGHTS;
 
-              <small>
-                ${room.category}
-                ·
-                ${nights}
-                night${nights > 1 ? "s" : ""}
-              </small>
+      const guests = Number(room.guests) || DEFAULT_GUESTS;
 
-            </div>
+      const roomTotal = calculateBookingTotal(room);
 
-            <div class="booking-right">
+      html += `
+        <div class="booking-item">
 
-              <strong>
-                ${total.toLocaleString()} ETB
-              </strong>
+          <div>
 
-              <button
-                class="remove-booking"
-                data-id="${room.id}"
-              >
-                Remove
-              </button>
+            <h4>
+              ${room.name}
+            </h4>
 
-            </div>
+            <small>
+              ${room.category}
+            </small>
+
+            <small>
+              ${nights}
+              night${nights > 1 ? "s" : ""}
+              ·
+              ${guests}
+              guest${guests > 1 ? "s" : ""}
+            </small>
 
           </div>
-        `;
-    })
-    .join("");
 
-  // Calculate total booking price
-  const total = state.booking.reduce((sum, room) => {
-    const nights = room.nights || 1;
+          <div class="booking-right">
 
-    return sum + room.price * nights;
-  }, 0);
+            <strong>
+              ${formatPrice(roomTotal)}
+            </strong>
 
-  totalPrice.textContent = `${total.toLocaleString()} ETB`;
+            <button
+              type="button"
+              class="remove-booking"
+              data-id="${room.id}"
+            >
+              Remove
+            </button>
 
-  // Remove booking
+          </div>
+
+        </div>
+      `;
+    });
+
+    html += `
+      </div>
+    `;
+  }
+
+  // CONFIRMED RESERVATIONS
+
+  if (hasReservations) {
+    html += `
+      <div class="stay-group">
+
+        <p class="section-label">
+          BOOKING HISTORY
+        </p>
+    `;
+
+    state.reservations.forEach((reservation) => {
+      const date = new Date(reservation.placedAt);
+
+      const formattedDate = date.toLocaleDateString("en-ET", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+
+      html += `
+        <div class="booking-item confirmed-booking">
+
+          <div>
+
+            <h4>
+              Reservation confirmed ✓
+            </h4>
+
+            <small>
+              ${reservation.name}
+            </small>
+
+            <small>
+              ${formattedDate}
+            </small>
+
+            <small>
+              ${reservation.items.length}
+              room${reservation.items.length > 1 ? "s" : ""}
+            </small>
+
+          </div>
+
+          <div class="booking-right">
+
+            <strong>
+              ${formatPrice(reservation.total)}
+            </strong>
+
+            <span class="reservation-status">
+              Confirmed
+            </span>
+
+          </div>
+
+        </div>
+
+        <div class="reservation-details">
+
+          ${reservation.items
+            .map(
+              (room) => `
+                <div>
+                  <strong>${room.name}</strong>
+                  <span>
+                    ${room.nights} night${room.nights > 1 ? "s" : ""}
+                    ·
+                    ${room.guests} guest${room.guests > 1 ? "s" : ""}
+                  </span>
+                </div>
+              `,
+            )
+            .join("")}
+
+        </div>
+      `;
+    });
+
+    html += `
+      </div>
+    `;
+  }
+
+  bookingList.innerHTML = html;
+
+  // Total should represent the
+  // current checkout not old history
+
+  totalPrice.textContent = formatPrice(calculateTotal());
+
+  attachBookingEvents();
+}
+
+// Attach remove booking events
+
+function attachBookingEvents() {
   document.querySelectorAll(".remove-booking").forEach((button) => {
     button.addEventListener("click", () => {
       const roomId = Number(button.dataset.id);
@@ -366,19 +713,191 @@ function renderBookings() {
   });
 }
 
-// Search input event listener
-searchInput.addEventListener("input", (event) => {
-  state.search = event.target.value;
+// Validate checkout information
+
+function validateCheckout({ name, phone }) {
+  const cleanName = name.trim();
+
+  const cleanPhone = phone.trim();
+
+  // Check name
+
+  if (!cleanName) {
+    return "Please enter your name.";
+  }
+
+  // Name should contain letters,
+  // spaces, apostrophes or hyphens
+
+  if (!NAME_PATTERN.test(cleanName)) {
+    return "Name should contain letters only.";
+  }
+
+  // Check phone
+
+  if (!cleanPhone) {
+    return "Please enter your mobile number.";
+  }
+
+  // Check Ethiopian phone format
+
+  if (!PHONE.test(cleanPhone)) {
+    return "Enter a valid Ethiopian phone number.";
+  }
+
+  // Check whether there is a reservation
+
+  if (state.booking.length === 0) {
+    return "Your cart is empty.";
+  }
+
+  return "";
+}
+
+// Validate name while typing
+
+if (nameInput) {
+  nameInput.addEventListener("input", () => {
+    nameInput.value = nameInput.value.replace(/[^A-Za-zÀ-ÿ' -]/g, "");
+  });
+}
+
+// Validate phone while typing
+
+if (phoneInput) {
+  phoneInput.addEventListener("input", () => {
+    phoneInput.value = phoneInput.value.replace(/[^0-9+]/g, "");
+
+    if (phoneInput.value.includes("+")) {
+      phoneInput.value = "+" + phoneInput.value.replace(/\+/g, "").slice(0, 12);
+    }
+  });
+}
+
+// PLACE ORDER
+
+// Place the order
+
+function placeOrder(data) {
+  const order = {
+    ...data,
+
+    items: [...state.booking],
+
+    total: calculateTotal(),
+
+    placedAt: new Date().toISOString(),
+  };
+
+  console.log("Order placed:", order);
+
+  const total = order.total;
+
+  // SAVE TO RESERVATION HISTORY
+
+  state.reservations.push(order);
+
+  saveReservations();
+
+  state.booking = [];
+
+  saveBookings();
 
   render();
-});
+
+  renderBookings();
+
+  checkoutForm.reset();
+
+  showConfirmation(order);
+}
+
+// Show order confirmation
+
+function showConfirmation(order) {
+  confirmation.innerHTML = `
+    <strong>
+      Reservation confirmed! ✓
+    </strong>
+
+    <span>
+      Your reservation for
+      ${order.items.length}
+      room${order.items.length > 1 ? "s" : ""}
+      has been confirmed.
+    </span>
+
+    <span>
+      Total:
+      ${formatPrice(order.total)}
+    </span>
+
+    <small>
+      Your reservation has been saved
+      under My Stays.
+    </small>
+  `;
+
+  // Show the box only after
+  // a successful action
+
+  confirmation.hidden = false;
+
+  document.querySelector("#stays")?.scrollIntoView({
+    behavior: "smooth",
+  });
+}
+
+// Checkout form
+
+if (checkoutForm) {
+  checkoutForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const data = {
+      name: nameInput.value,
+      phone: phoneInput.value,
+    };
+
+    const message = validateCheckout(data);
+
+    // Hide old confirmation first
+
+    confirmation.hidden = true;
+
+    confirmation.textContent = "";
+
+    if (message) {
+      confirmation.textContent = message;
+
+      confirmation.hidden = false;
+
+      return;
+    }
+
+    placeOrder(data);
+  });
+}
+
+// Search input event listener
+
+if (searchInput) {
+  searchInput.addEventListener("input", (event) => {
+    state.search = event.target.value;
+
+    render();
+  });
+}
 
 // Category buttons event listeners
+
 categoryButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    state.category = button.textContent;
+    state.category = button.textContent.trim();
 
-    categoryButtons.forEach((btn) => btn.classList.remove("active"));
+    categoryButtons.forEach((btn) => {
+      btn.classList.remove("active");
+    });
 
     button.classList.add("active");
 
@@ -387,102 +906,64 @@ categoryButtons.forEach((button) => {
 });
 
 // Price filter event listener
-priceFilter.addEventListener("input", (event) => {
-  state.maxPrice = Number(event.target.value);
 
-  priceValue.textContent = `${state.maxPrice.toLocaleString()} ETB / night`;
+if (priceFilter) {
+  priceFilter.addEventListener("input", (event) => {
+    state.maxPrice = Number(event.target.value);
 
-  render();
-});
+    priceValue.textContent = `${state.maxPrice.toLocaleString()} ETB / night`;
 
-// Room modal close button
-modalClose.addEventListener("click", closeRoomModal);
-
-// Close modal when clicking
-// outside the modal content
-roomModal.addEventListener("click", (event) => {
-  if (event.target === roomModal) {
-    closeRoomModal();
-  }
-});
-
-// Number of nights input
-stayNights.addEventListener("input", () => {
-  let nights = Number(stayNights.value);
-
-  if (nights < 1) {
-    nights = 1;
-    stayNights.value = 1;
-  }
-
-  updateModalTotal();
-});
-
-// Number of guests input
-stayGuests.addEventListener("input", () => {
-  if (!selectedRoom) return;
-
-  let guests = Number(stayGuests.value);
-
-  if (guests < 1) {
-    guests = 1;
-    stayGuests.value = 1;
-  }
-
-  if (guests > selectedRoom.capacity) {
-    guests = selectedRoom.capacity;
-
-    stayGuests.value = selectedRoom.capacity;
-  }
-});
-
-// Confirm reservation from modal
-modalReserve.addEventListener("click", () => {
-  if (!selectedRoom) return;
-
-  const nights = Number(stayNights.value) || 1;
-
-  const guests = Number(stayGuests.value) || 1;
-
-  const alreadyBooked = state.booking.some(
-    (room) => room.id === selectedRoom.id,
-  );
-
-  if (alreadyBooked) {
-    closeRoomModal();
-    return;
-  }
-
-  const total = selectedRoom.price * nights;
-
-  // Add room to bookings
-  state.booking.push({
-    ...selectedRoom,
-    nights: nights,
-    guests: guests,
-    total: total,
+    render();
   });
+}
 
-  // Save booking to Local Storage
-  saveBookings();
+// MODAL EVENTS
 
-  // Update room cards
-  render();
+// Modal close button
 
-  // Update My Stays
-  renderBookings();
-
-  // Close modal
-  closeRoomModal();
-
-  // Show My Stays
-  document.querySelector("#stays").scrollIntoView({
-    behavior: "smooth",
+if (modalClose) {
+  modalClose.addEventListener("click", () => {
+    closeRoomModal();
   });
-});
+}
 
-// Start the app
+// Close modal when clicking outside
+
+if (roomModal) {
+  roomModal.addEventListener("click", (event) => {
+    if (event.target === roomModal) {
+      closeRoomModal();
+    }
+  });
+}
+
+// Update total when nights change
+
+if (stayNights) {
+  stayNights.addEventListener("input", () => {
+    updateModalTotal();
+  });
+}
+
+// Update total when guests change
+
+if (stayGuests) {
+  stayGuests.addEventListener("input", () => {
+    updateModalTotal();
+  });
+}
+
+// Confirm reservation button
+
+if (modalReserve) {
+  modalReserve.addEventListener("click", () => {
+    confirmReservation();
+  });
+}
+
 loadBookings();
+
+loadReservations();
 
 renderBookings();
 
