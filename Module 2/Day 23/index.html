@@ -47,6 +47,7 @@
         </div>
       </section>
 
+      <!-- rooms -->
       <section id="rooms" class="rooms-section" aria-labelledby="rooms-title">
         <div class="section-heading">
           <div>
@@ -58,7 +59,11 @@
           <p class="room-count">6 of 6</p>
         </div>
 
+        <!-- Room Controls -->
+
         <div class="room-controls">
+          <!-- Search -->
+
           <div class="search-wrapper">
             <label for="room-search"> Search rooms </label>
 
@@ -69,24 +74,29 @@
             />
           </div>
 
+          <!-- Category -->
+
           <div class="category-wrapper">
             <span class="filter-label"> Category </span>
 
             <div class="category-buttons">
-              <button class="category-button active">All</button>
+              <button type="button" class="category-button active">All</button>
 
-              <button class="category-button">Standard</button>
+              <button type="button" class="category-button">Standard</button>
 
-              <button class="category-button">Deluxe</button>
+              <button type="button" class="category-button">Deluxe</button>
 
-              <button class="category-button">Suite</button>
+              <button type="button" class="category-button">Suite</button>
             </div>
           </div>
+
+          <!-- Price -->
 
           <div class="price-wrapper">
             <div class="price-heading">
               <span>Max price</span>
-              <span id="price-value">12,000 ETB / night</span>
+
+              <span id="price-value"> 12,000 ETB / night </span>
             </div>
 
             <input
@@ -99,8 +109,12 @@
           </div>
         </div>
 
+        <!-- Room cards are rendered here -->
+
         <div id="room-grid" class="room-grid" aria-live="polite"></div>
       </section>
+
+      <!--MY STAYS-->
 
       <section id="stays" class="stays-section" aria-labelledby="stays-title">
         <div class="stays-content">
@@ -108,115 +122,174 @@
 
           <h2 id="stays-title">My Stays</h2>
 
+          <!-- Current bookings / booking history -->
+
           <div id="booking-list"></div>
+
+          <!-- Total -->
 
           <div class="booking-total">
             <span>Total</span>
+
             <strong id="total-price">0 ETB</strong>
+          </div>
+          <!-- CHECKOUT -->
+
+          <div class="checkout-section">
+            <p class="section-label">CHECKOUT</p>
+
+            <h3>Complete your reservation.</h3>
+
+            <form id="checkout-form" novalidate>
+              <!-- Name -->
+
+              <div class="checkout-field">
+                <label for="guest-name"> Full name </label>
+
+                <input
+                  type="text"
+                  id="guest-name"
+                  placeholder="Enter your full name"
+                  autocomplete="name"
+                  required
+                />
+              </div>
+
+              <!-- Phone -->
+
+              <div class="checkout-field">
+                <label for="guest-phone"> TeleBirr phone </label>
+
+                <input
+                  type="tel"
+                  id="guest-phone"
+                  placeholder="09xxxxxxxx"
+                  inputmode="tel"
+                  autocomplete="tel"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                id="checkout-button"
+                class="checkout-button"
+              >
+                Confirm & Pay with TeleBirr
+              </button>
+            </form>
+
+            <!--
+               Error or successful confirmation.
+            -->
+
+            <div
+              id="confirmation"
+              class="confirmation"
+              aria-live="polite"
+              hidden
+            ></div>
+          </div>
         </div>
       </section>
     </main>
 
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
     <footer class="site-footer">
       <div>
-        <span class="footer-logo">QENÉ RESIDENCES</span>
+        <span class="footer-logo"> QENÉ RESIDENCES </span>
+
         <p>Addis Ababa · Ethiopia</p>
       </div>
 
       <p>© 2026 Qené Residences</p>
     </footer>
 
-    <!-- Room Details Modal -->
-<div
-  id="room-modal"
-  class="room-modal"
-  aria-hidden="true"
->
-  <div class="room-modal-content">
+    <!-- =========================
+         ROOM DETAILS MODAL
+    ========================== -->
 
-    <button
-      id="modal-close"
-      class="modal-close"
-      aria-label="Close room details"
-    >
-      ×
-    </button>
+    <div id="room-modal" class="room-modal" aria-hidden="true">
+      <div class="room-modal-content">
+        <!-- Close -->
 
-    <img
-      id="modal-image"
-      class="modal-image"
-      src=""
-      alt=""
-    />
+        <button
+          id="modal-close"
+          class="modal-close"
+          type="button"
+          aria-label="Close room details"
+        >
+          ×
+        </button>
 
-    <div class="modal-body">
+        <!-- Room image -->
 
-      <p id="modal-category" class="section-label"></p>
+        <img id="modal-image" class="modal-image" src="" alt="" />
 
-      <h2 id="modal-name"></h2>
+        <div class="modal-body">
+          <p id="modal-category" class="section-label"></p>
 
-      <p id="modal-description" class="modal-description"></p>
+          <h2 id="modal-name"></h2>
 
-      <div class="modal-price">
-        <strong id="modal-price"></strong>
-        <span>/ night</span>
-      </div>
+          <p id="modal-description" class="modal-description"></p>
 
-      <div class="modal-section">
-        <h3>Stay details</h3>
+          <div class="modal-price">
+            <strong id="modal-price"></strong>
 
-        <div class="stay-options">
-
-          <div class="stay-option">
-            <label for="stay-nights">
-              Nights
-            </label>
-
-            <input
-              type="number"
-              id="stay-nights"
-              min="1"
-              value="1"
-            />
+            <span>/ night</span>
           </div>
 
-          <div class="stay-option">
-            <label for="stay-guests">
-              Guests
-            </label>
+          <!-- Stay details -->
 
-            <input
-              type="number"
-              id="stay-guests"
-              min="1"
-              value="1"
-            />
+          <div class="modal-section">
+            <h3>Stay details</h3>
+
+            <div class="stay-options">
+              <!-- Nights -->
+
+              <div class="stay-option">
+                <label for="stay-nights"> Nights </label>
+
+                <input type="number" id="stay-nights" min="1" value="1" />
+              </div>
+
+              <!-- Guests -->
+
+              <div class="stay-option">
+                <label for="stay-guests"> Guests </label>
+
+                <input type="number" id="stay-guests" min="1" value="1" />
+              </div>
+            </div>
           </div>
 
+          <!-- Amenities -->
+
+          <div class="modal-section">
+            <h3>Amenities</h3>
+
+            <div id="modal-amenities" class="amenities-list"></div>
+          </div>
+
+          <!-- Modal total -->
+
+          <div class="modal-total">
+            <span> Estimated total </span>
+
+            <strong id="modal-total-price"> 0 ETB </strong>
+          </div>
+
+          <!-- Reserve -->
+
+          <button id="modal-reserve" class="modal-reserve-button" type="button">
+            Confirm Reservation
+          </button>
         </div>
       </div>
-
-      <div class="modal-section">
-        <h3>Amenities</h3>
-
-        <div id="modal-amenities" class="amenities-list"></div>
-      </div>
-
-      <div class="modal-total">
-        <span>Estimated total</span>
-        <strong id="modal-total-price">0 ETB</strong>
-      </div>
-
-      <button
-        id="modal-reserve"
-        class="modal-reserve-button"
-      >
-        Confirm Reservation
-      </button>
-
     </div>
-  </div>
-</div>
 
     <script src="app.js"></script>
   </body>
