@@ -1,184 +1,430 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+/* ================================
+   Addis Eats - Main App Styles
+   ================================ */
 
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+.app {
+  width: min(100% - 32px, 1000px);
+  margin: 0 auto;
+  padding: 32px 0 50px;
 }
 
-.hero {
-  position: relative;
+/* ================================
+   Header
+   ================================ */
 
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
+header {
+  text-align: center;
+  margin-bottom: 35px;
 }
 
-#center {
+header h1 {
+  margin: 0;
+  font-size: 3rem;
+  letter-spacing: 1px;
+}
+
+header p {
+  margin-top: 8px;
+  font-size: 1.1rem;
+  opacity: 0.7;
+}
+
+/* ================================
+   Menu Section
+   ================================ */
+
+.menu-section {
+  margin-top: 20px;
+}
+
+.menu-section h2 {
+  margin-bottom: 18px;
+  font-size: 1.8rem;
+}
+
+/* ================================
+   Category Buttons
+   ================================ */
+
+.category-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.category-bar button {
+  padding: 9px 17px;
+  border: 1px solid #ccc;
+  border-radius: 999px;
+  background: white;
+  color: #333;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.category-bar button:hover {
+  transform: translateY(-2px);
+}
+
+.category-bar button.active {
+  background: #333;
+  color: white;
+  border-color: #333;
+}
+
+/* ================================
+   Dish List
+   ================================ */
+
+.dish-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+/* ================================
+   Individual Dish Card
+   ================================ */
+
+.dish {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  padding: 20px;
+  border: 1px solid #e5e5e5;
+  border-radius: 14px;
+  background: white;
+
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dish:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dish h3 {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+}
+
+.dish p {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ================================
+   Spicy Label
+   ================================ */
+
+.spicy {
+  display: inline-block;
+  margin-top: 3px;
+  font-size: 0.9rem;
+}
+
+/* ================================
+   Dish Actions
+   ================================ */
+
+.dish-actions {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
-}
-
-#next-steps {
-  display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
-}
-
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
+  align-items: flex-end;
   gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
+  flex-shrink: 0;
 }
 
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
+.counter {
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.ticks {
-  position: relative;
+.dish-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #333;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.dish-actions button:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.dish-actions button:active {
+  transform: translateY(0);
+}
+
+/* ================================
+   Empty Message
+   ================================ */
+
+.empty {
+  padding: 25px;
+  text-align: center;
+  border: 1px dashed #ccc;
+  border-radius: 12px;
+  opacity: 0.7;
+}
+
+/* ================================
+   Order Total
+   ================================ */
+
+.total-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin: 30px 0;
+  padding: 18px 22px;
+
+  border-radius: 14px;
+  background: #f5f5f5;
+  border: 1px solid #e5e5e5;
+}
+
+.total-banner span {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.total-banner strong {
+  font-size: 1.3rem;
+}
+
+/* ================================
+   Delivery Section
+   ================================ */
+
+.delivery-section {
+  margin-top: 35px;
+  padding: 25px;
+
+  border: 1px solid #e5e5e5;
+  border-radius: 14px;
+  background: white;
+
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.delivery-section h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+/* ================================
+   Delivery Form
+   ================================ */
+
+.delivery-section form {
+  display: grid;
+  gap: 10px;
+}
+
+.delivery-section label {
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+.delivery-section input,
+.delivery-section select {
   width: 100%;
+  box-sizing: border-box;
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
+  padding: 11px 12px;
+
+  border: 1px solid #ccc;
+  border-radius: 8px;
+
+  background: white;
+  font-size: 1rem;
+
+  outline: none;
+}
+
+.delivery-section input:focus,
+.delivery-section select:focus {
+  border-color: #555;
+}
+
+/* ================================
+   Phone Validation
+   ================================ */
+
+.error {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.valid {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ================================
+   Form Order Total
+   ================================ */
+
+.order-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 15px;
+  padding: 14px 0;
+
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.order-total strong {
+  font-size: 1rem;
+}
+
+.order-total span {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+/* ================================
+   TeleBirr Button
+   ================================ */
+
+.delivery-section button[type="submit"] {
+  margin-top: 10px;
+
+  padding: 12px 18px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #333;
+  color: white;
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.delivery-section button[type="submit"]:hover:not(:disabled) {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.delivery-section button[type="submit"]:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ================================
+   Responsive Design
+   ================================ */
+
+@media (max-width: 700px) {
+  .app {
+    width: min(100% - 24px, 600px);
+    padding-top: 24px;
   }
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
+  header h1 {
+    font-size: 2.3rem;
   }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
+
+  .dish-list {
+    grid-template-columns: 1fr;
+  }
+
+  .dish {
+    padding: 16px;
+  }
+
+  .total-banner {
+    gap: 15px;
+  }
+}
+
+@media (max-width: 450px) {
+  .app {
+    width: min(100% - 20px, 100%);
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+
+  .category-bar {
+    gap: 7px;
+  }
+
+  .category-bar button {
+    padding: 8px 13px;
+    font-size: 0.85rem;
+  }
+
+  .dish {
+    align-items: flex-start;
+  }
+
+  .dish-actions {
+    align-items: flex-end;
+  }
+
+  .total-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .delivery-section {
+    padding: 18px;
+  }
+}
+
+/* ================================
+   Reduced Motion
+   ================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .dish,
+  .category-bar button,
+  .dish-actions button,
+  .delivery-section button[type="submit"] {
+    transition: none;
+  }
+
+  .dish:hover,
+  .category-bar button:hover,
+  .dish-actions button:hover,
+  .delivery-section button[type="submit"]:hover {
+    transform: none;
   }
 }
