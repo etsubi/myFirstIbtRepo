@@ -1,56 +1,45 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-  background: #f7f4ee;
-  color: #222;
-}
-
-.app {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 20px;
-}
-
-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-header h1 {
-  color: #8b3a2b;
-  font-size: 2.5rem;
-}
-
-header p {
-  color: #666;
-  margin-top: 8px;
-}
-
-section h2 {
-  margin-bottom: 15px;
-}
-
-.dish {
+.card {
   background: white;
   border-radius: 12px;
-  padding: 18px;
   margin-bottom: 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.dish h3 {
-  font-size: 1.1rem;
+.dish {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px;
 }
 
-.dish p {
-  font-weight: bold;
-  color: #8b3a2b;
+.filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.filters button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 20px;
+  background: #8b3a2b;
+  color: white;
+  cursor: pointer;
+}
+
+.badge {
+  display: inline-block;
+  margin-top: 6px;
+  background: #e63946;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+}
+
+.empty {
+  text-align: center;
+  color: #777;
+  margin: 30px 0;
 }
