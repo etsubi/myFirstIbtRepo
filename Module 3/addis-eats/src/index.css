@@ -1,0 +1,56 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #f7f4ee;
+  color: #222;
+}
+
+.app {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+header h1 {
+  color: #8b3a2b;
+  font-size: 2.5rem;
+}
+
+header p {
+  color: #666;
+  margin-top: 8px;
+}
+
+section h2 {
+  margin-bottom: 15px;
+}
+
+.dish {
+  background: white;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.dish h3 {
+  font-size: 1.1rem;
+}
+
+.dish p {
+  font-weight: bold;
+  color: #8b3a2b;
+}
