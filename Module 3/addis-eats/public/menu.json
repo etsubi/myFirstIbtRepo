@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Doro Wat",
+    "category": "Meals",
+    "price": 950,
+    "image": "/images/doro.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Kitfo",
+    "category": "Meals",
+    "price": 1200,
+    "image": "/images/Kitfo.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Cheesecake",
+    "category": "Desserts",
+    "price": 480,
+    "image": "/images/cake.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Coffee",
+    "category": "Drinks",
+    "price": 80,
+    "image": "/images/coffee.webp"
+  }
+]
