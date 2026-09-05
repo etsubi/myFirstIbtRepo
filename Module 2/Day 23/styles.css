@@ -555,9 +555,7 @@ input {
   color: var(--gold);
   font-size: 1.2rem;
 }
-/* =========================
-   ROOM DETAILS MODAL
-========================= */
+/*ROOM DETAILS MODAL*/
 
 .room-modal {
   position: fixed;
@@ -792,9 +790,7 @@ input {
     grid-template-columns: 1fr;
   }
 }
-/* =========================
-   CHECKOUT SECTION
-========================= */
+/* CHECKOUT SECTION*/
 
 .checkout-section {
   margin-top: 3rem;
@@ -903,9 +899,7 @@ input {
     padding: 0.9rem;
   }
 }
-/* =========================
-   CHECKOUT ERROR
-========================= */
+/* CHECKOUT ERROR*/
 
 .checkout-error {
   margin: 1rem 0;
@@ -918,9 +912,7 @@ input {
   line-height: 1.5;
 }
 
-//* =========================
-   CHECKOUT CONFIRMATION
-========================= */
+/*CHECKOUT CONFIRMATION*/
 
 .confirmation {
   margin-top: 24px;
