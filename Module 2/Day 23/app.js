@@ -20,7 +20,6 @@ const MIN_GUESTS = 1;
 
 const ROOM_DATA_URL = "data/rooms.json";
 
-// Ethiopian mobile: 09xxxxxxxx or +2519xxxxxxxx
 const PHONE = /^(?:\+251|0)9\d{8}$/;
 
 const NAME_PATTERN = /^[A-Za-zÀ-ÿ' -]+$/;
@@ -77,19 +76,15 @@ const confirmation = document.querySelector("#confirmation");
 
 let selectedRoom = null;
 
-// Save current bookings to localStorage
+// Save current states to localStorage
 
 function saveBookings() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state.booking));
 }
 
-// Save confirmed reservations to localStorage
-
 function saveReservations() {
   localStorage.setItem(RESERVATIONS_KEY, JSON.stringify(state.reservations));
 }
-
-// Load bookings from localStorage
 
 function loadBookings() {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -101,8 +96,6 @@ function loadBookings() {
       state.booking = [];
       return;
     }
-
-    // Make sure older bookings still work
 
     state.booking = bookings.map((booking) => ({
       ...booking,
@@ -140,7 +133,6 @@ function loadReservations() {
   }
 }
 
-// Load rooms from JSON file
 
 async function loadRooms() {
   roomGrid.textContent = "Loading rooms...";
@@ -182,20 +174,16 @@ function findRoom(roomId) {
   return state.rooms.find((room) => room.id === roomId);
 }
 
-// Check whether a room is already in the
-// current booking
 
 function isRoomBooked(roomId) {
   return state.booking.some((booking) => booking.id === roomId);
 }
 
-// Format ETB prices consistently
 
 function formatPrice(amount) {
   return `${Number(amount).toLocaleString()} ETB`;
 }
 
-// Calculate the total price for one booking
 
 function calculateBookingTotal(booking) {
   const nights = Number(booking.nights) || DEFAULT_NIGHTS;
@@ -205,7 +193,6 @@ function calculateBookingTotal(booking) {
   return price * nights;
 }
 
-// Calculate the total price of current bookings
 
 function calculateTotal() {
   return state.booking.reduce((total, booking) => {
@@ -214,8 +201,6 @@ function calculateTotal() {
 }
 
 // ROOM MODAL
-
-// Open room modal
 
 function openRoomModal(room) {
   if (!room) return;
@@ -247,7 +232,6 @@ function openRoomModal(room) {
   roomModal.setAttribute("aria-hidden", "false");
 }
 
-// Render room amenities
 
 function renderAmenities(amenities = []) {
   modalAmenities.innerHTML = amenities
@@ -261,8 +245,6 @@ function renderAmenities(amenities = []) {
     .join("");
 }
 
-// Close room modal
-
 function closeRoomModal() {
   roomModal.classList.remove("open");
 
@@ -270,8 +252,6 @@ function closeRoomModal() {
 
   selectedRoom = null;
 }
-
-// Update modal total
 
 function updateModalTotal() {
   if (!selectedRoom) return;
@@ -284,8 +264,6 @@ function updateModalTotal() {
 }
 
 // RENDER ROOMS
-// Get rooms that match the current filters
-
 function getFilteredRooms() {
   const searchTerm = state.search.toLowerCase().trim();
 
@@ -398,7 +376,6 @@ function renderRooms() {
 }
 
 // ROOM EVENTS
-// Attach events to room cards and reserve buttons
 
 function attachRoomEvents() {
   document.querySelectorAll(".room-card").forEach((card) => {
@@ -441,15 +418,12 @@ function attachRoomEvents() {
 
 // MAIN RENDER
 
-// Render the complete app
-
 function render() {
   renderRooms();
   renderBookings();
   attachRoomEvents();
 }
 
-// CONFIRM RESERVATION
 // Confirm reservation from modal
 
 function confirmReservation() {
@@ -494,18 +468,12 @@ function confirmReservation() {
 
   closeRoomModal();
 
-  // Scroll to My Stays so the user can
-  // immediately see the reservation
-
   document.querySelector("#stays")?.scrollIntoView({
     behavior: "smooth",
   });
 }
 
-// RENDER BOOKINGS
-
-// Render current bookings and
-// confirmed reservation history
+// Render current bookings and confirmed reservation history
 
 function renderBookings() {
   const hasCurrentBookings = state.booking.length > 0;
@@ -687,8 +655,6 @@ function renderBookings() {
 
   bookingList.innerHTML = html;
 
-  // Total should represent the
-  // current checkout not old history
 
   totalPrice.textContent = formatPrice(calculateTotal());
 
@@ -720,20 +686,16 @@ function validateCheckout({ name, phone }) {
 
   const cleanPhone = phone.trim();
 
-  // Check name
 
   if (!cleanName) {
     return "Please enter your name.";
   }
 
-  // Name should contain letters,
-  // spaces, apostrophes or hyphens
 
   if (!NAME_PATTERN.test(cleanName)) {
     return "Name should contain letters only.";
   }
 
-  // Check phone
 
   if (!cleanPhone) {
     return "Please enter your mobile number.";
@@ -773,10 +735,6 @@ if (phoneInput) {
     }
   });
 }
-
-// PLACE ORDER
-
-// Place the order
 
 function placeOrder(data) {
   const order = {
@@ -838,8 +796,6 @@ function showConfirmation(order) {
     </small>
   `;
 
-  // Show the box only after
-  // a successful action
 
   confirmation.hidden = false;
 
@@ -919,15 +875,12 @@ if (priceFilter) {
 
 // MODAL EVENTS
 
-// Modal close button
 
 if (modalClose) {
   modalClose.addEventListener("click", () => {
     closeRoomModal();
   });
 }
-
-// Close modal when clicking outside
 
 if (roomModal) {
   roomModal.addEventListener("click", (event) => {
@@ -945,15 +898,12 @@ if (stayNights) {
   });
 }
 
-// Update total when guests change
 
 if (stayGuests) {
   stayGuests.addEventListener("input", () => {
     updateModalTotal();
   });
 }
-
-// Confirm reservation button
 
 if (modalReserve) {
   modalReserve.addEventListener("click", () => {

@@ -1,120 +1,40 @@
-import { useEffect, useRef, useState } from "react";
-import "./App.css";
+import { Routes, Route } from "react-router-dom";
+
+import Layout from "./components/Layout";
+
+import Home from "./pages/Home";
+import Menu from "./pages/Menu";
+import DishDetail from "./pages/DishDetail";
+import Checkout from "./pages/checkout";
+import SignIn from "./pages/SignIn";
+import NotFound from "./pages/NotFound";
+
+import RequireAuth from "./auth/RequireAuth";
 
 function App() {
-  const [menu, setMenu] = useState([]);
-  const [category, setCategory] = useState("All");
-  const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const searchRef = useRef(null);
-
-  const categories = ["All", "Meals", "Desserts", "Drinks"];
-
-  // Auto focus search field
-  useEffect(() => {
-    searchRef.current?.focus();
-  }, []);
-
-  // Fetch menu whenever category changes
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function loadMenu() {
-      try {
-        setLoading(true);
-        setError("");
-
-        const res = await fetch("/menu.json", {
-          signal: controller.signal,
-        });
-
-        if (!res.ok) {
-          throw new Error("Failed to load Addis Eats menu.");
-        }
-
-        const data = await res.json();
-
-        const filtered =
-          category === "All"
-            ? data
-            : data.filter((dish) => dish.category === category);
-
-        setMenu(filtered);
-      } catch (err) {
-        if (err.name !== "AbortError") {
-          setError(err.message);
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadMenu();
-
-    return () => controller.abort();
-  }, [category]);
-
-  // Search filter
-  const visibleMenu = menu.filter((dish) =>
-    dish.name.toLowerCase().includes(search.toLowerCase()),
-  );
-
-  // Early return: loading
-  if (loading) {
-    return (
-      <div className="status-screen">
-        <h2>🍽 Loading Addis Eats...</h2>
-      </div>
-    );
-  }
-
-  // Early return: error
-  if (error) {
-    return (
-      <div className="status-screen">
-        <h2>Something went wrong</h2>
-        <p>{error}</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="container">
-      <h1>Addis Eats</h1>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
 
-      <input
-        ref={searchRef}
-        type="text"
-        placeholder="Search dishes..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+        <Route path="menu" element={<Menu />} />
 
-      <div className="categories">
-        {categories.map((item) => (
-          <button
-            key={item}
-            className={category === item ? "active" : ""}
-            onClick={() => setCategory(item)}
-          >
-            {item}
-          </button>
-        ))}
-      </div>
+        <Route path="menu/:id" element={<DishDetail />} />
 
-      <div className="menu-grid">
-        {visibleMenu.map((dish) => (
-          <div className="card" key={dish.id}>
-            <img src={dish.image} alt={dish.name} />
-            <h3>{dish.name}</h3>
-            <p>{dish.category}</p>
-            <strong>{dish.price} ETB</strong>
-          </div>
-        ))}
-      </div>
-    </div>
+        <Route path="signin" element={<SignIn />} />
+
+        <Route
+          path="checkout"
+          element={
+            <RequireAuth>
+              <Checkout />
+            </RequireAuth>
+          }
+        />
+
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   );
 }
 
