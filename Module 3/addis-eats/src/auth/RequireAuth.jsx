@@ -1,12 +1,11 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 function RequireAuth({ children }) {
-  const location = useLocation();
+  const { user } = useAuth();
 
-  const isSignedIn = localStorage.getItem("isSignedIn") === "true";
-
-  if (!isSignedIn) {
-    return <Navigate to="/signin" state={{ from: location }} replace />;
+  if (!user) {
+    return <Navigate to="/signin" replace />;
   }
 
   return children;

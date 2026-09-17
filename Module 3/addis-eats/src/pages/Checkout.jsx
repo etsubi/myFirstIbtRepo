@@ -1,12 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import useCartStore from "../store/cartStore";
 
 function Checkout() {
   const navigate = useNavigate();
 
+  const items = useCartStore((state) => state.items);
+  const clear = useCartStore((state) => state.clear);
+
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+
+  const total = items.reduce((sum, item) => sum + item.price, 0);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -16,7 +22,14 @@ function Checkout() {
       return;
     }
 
-    alert("Order placed successfully!");
+    if (items.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+
+    alert(`Order placed successfully!\nTotal: ${total} ETB`);
+
+    clear();
 
     setName("");
     setPhone("");
@@ -30,6 +43,28 @@ function Checkout() {
       <h1>Checkout</h1>
 
       <p>Complete your order below.</p>
+
+      <div className="cart-summary">
+        <h2>Your Order</h2>
+
+        {items.length === 0 ? (
+          <p>Your cart is empty.</p>
+        ) : (
+          <>
+            {items.map((item, index) => (
+              <div key={`${item.id}-${index}`} className="cart-item">
+                <span>{item.name}</span>
+                <span>{item.price} ETB</span>
+              </div>
+            ))}
+
+            <div className="order-total">
+              <strong>Total:</strong>
+              <strong>{total} ETB</strong>
+            </div>
+          </>
+        )}
+      </div>
 
       <form onSubmit={handleSubmit}>
         <div>
