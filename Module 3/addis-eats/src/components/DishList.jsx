@@ -1,6 +1,6 @@
 import Dish from "./Dish";
 
-function DishList({ dishes, selectedCategory, onAdd }) {
+function DishList({ dishes, selectedCategory }) {
   const filteredDishes =
     selectedCategory === "All"
       ? dishes
@@ -15,10 +15,11 @@ function DishList({ dishes, selectedCategory, onAdd }) {
       {filteredDishes.map((dish) => (
         <Dish
           key={dish.id}
+          id={dish.id}
           name={dish.name}
           price={dish.price}
           spicy={dish.spicy}
-          onAdd={onAdd}
+          image={dish.image}
         />
       ))}
     </div>

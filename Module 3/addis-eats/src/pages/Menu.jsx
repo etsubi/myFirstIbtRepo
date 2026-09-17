@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import CategoryBar from "../components/CategoryBar";
 import DishList from "../components/DishList";
+
 const menu = [
   {
     id: 1,
@@ -52,10 +53,14 @@ const menu = [
     image: "/images/coffee.jpg",
   },
 ];
+
 const categories = ["All", "Meals", "Desserts", "Drinks"];
-function Menu({ onTotalChange }) {
+
+function Menu() {
   const [searchParams, setSearchParams] = useSearchParams();
+
   const selectedCategory = searchParams.get("category") || "All";
+
   const handleCategoryChange = (category) => {
     if (category === "All") {
       setSearchParams({});
@@ -63,26 +68,20 @@ function Menu({ onTotalChange }) {
       setSearchParams({ category });
     }
   };
-  const handleAdd = (price) => {
-    if (onTotalChange) {
-      onTotalChange((previousTotal) => previousTotal + price);
-    }
-  };
+
   return (
     <section className="menu-section">
-      {" "}
-      <h2>Today's Menu</h2>{" "}
+      <h2>Today's Menu</h2>
+
       <CategoryBar
         categories={categories}
         selectedCategory={selectedCategory}
         onCategoryChange={handleCategoryChange}
-      />{" "}
-      <DishList
-        dishes={menu}
-        selectedCategory={selectedCategory}
-        onAdd={handleAdd}
-      />{" "}
+      />
+
+      <DishList dishes={menu} selectedCategory={selectedCategory} />
     </section>
   );
 }
+
 export default Menu;

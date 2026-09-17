@@ -16,7 +16,10 @@ const useCartStore = create(
           items: state.items.filter((item) => item.id !== dishId),
         })),
 
-      clear: () => set({ items: [] }),
+      clear: () =>
+        set({
+          items: [],
+        }),
     }),
     {
       name: "addis-eats-cart",
