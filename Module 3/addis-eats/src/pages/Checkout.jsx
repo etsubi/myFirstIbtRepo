@@ -6,6 +6,7 @@ function Checkout() {
   const navigate = useNavigate();
 
   const items = useCartStore((state) => state.items);
+  const removeItem = useCartStore((state) => state.removeItem);
   const clear = useCartStore((state) => state.clear);
 
   const [name, setName] = useState("");
@@ -53,15 +54,24 @@ function Checkout() {
           <>
             {items.map((item, index) => (
               <div key={`${item.id}-${index}`} className="cart-item">
-                <span>{item.name}</span>
-                <span>{item.price} ETB</span>
+                <span>
+                  {item.name} - {item.price} ETB
+                </span>
+
+                <button type="button" onClick={() => removeItem(item.id)}>
+                  Remove
+                </button>
               </div>
             ))}
 
             <div className="order-total">
-              <strong>Total:</strong>
+              <strong>Order Total:</strong>
               <strong>{total} ETB</strong>
             </div>
+
+            <button type="button" onClick={clear}>
+              Clear Cart
+            </button>
           </>
         )}
       </div>

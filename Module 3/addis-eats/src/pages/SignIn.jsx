@@ -1,7 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 function SignIn() {
+  const { signIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -18,10 +20,9 @@ function SignIn() {
       return;
     }
 
-    // Save sign-in status
+    signIn({ email });
     localStorage.setItem("isSignedIn", "true");
 
-    // Return the user to the page they originally wanted
     navigate(from, { replace: true });
   }
 

@@ -1,12 +1,12 @@
-import { useState } from "react";
 import useCartStore from "../store/cartStore";
 
 function Dish({ id, name, price, spicy, image }) {
-  const [count, setCount] = useState(0);
-
   const addItem = useCartStore((state) => state.addItem);
+  const items = useCartStore((state) => state.items);
 
-  const handleAdd = () => {
+  const count = items.filter((item) => item.id === id).length;
+
+  function handleAdd() {
     const dish = {
       id,
       name,
@@ -16,14 +16,13 @@ function Dish({ id, name, price, spicy, image }) {
     };
 
     addItem(dish);
-
-    setCount((previousCount) => previousCount + 1);
-  };
+  }
 
   return (
     <div className="dish">
       <div>
         <h3>{name}</h3>
+
         <p>{price} ETB</p>
 
         {spicy && <span className="spicy">🌶️ Spicy</span>}
