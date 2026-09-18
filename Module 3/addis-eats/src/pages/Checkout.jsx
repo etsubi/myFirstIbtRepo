@@ -1,6 +1,33 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import useCartStore from "../store/cartStore";
+
+const PHONE_REGEX = /^(?:\+251|0)9\d{8}$/;
+const NAME_REGEX = /^[A-Za-z ]+$/;
+
+function validate(form) {
+  const errors = {};
+
+  if (!form.name.trim()) {
+    errors.name = "Full name is required.";
+  } else if (!NAME_REGEX.test(form.name.trim())) {
+    errors.name = "Name can contain letters and spaces only.";
+  }
+
+  if (!PHONE_REGEX.test(form.phone)) {
+    errors.phone = "Enter a valid Ethiopian phone number.";
+  }
+
+  if (!form.area) {
+    errors.area = "Please select a delivery area.";
+  }
+
+  if (form.notes.length > 150) {
+    errors.notes = "Notes must be under 150 characters.";
+  }
+
+  return errors;
+}
 
 function Checkout() {
   const navigate = useNavigate();
@@ -9,34 +36,119 @@ function Checkout() {
   const removeItem = useCartStore((state) => state.removeItem);
   const clear = useCartStore((state) => state.clear);
 
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-
   const total = items.reduce((sum, item) => sum + item.price, 0);
 
-  function handleSubmit(event) {
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    area: "",
+    notes: "",
+  });
+
+  const [touched, setTouched] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [requestError, setRequestError] = useState("");
+
+  const errors = useMemo(() => validate(form), [form]);
+
+  const nameRef = useRef(null);
+  const phoneRef = useRef(null);
+  const areaRef = useRef(null);
+  const notesRef = useRef(null);
+
+  const refs = {
+    name: nameRef,
+    phone: phoneRef,
+    area: areaRef,
+    notes: notesRef,
+  };
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+
+    // Full name: letters and spaces only
+    if (name === "name") {
+      const cleanedName = value.replace(/[^A-Za-z ]/g, "");
+
+      setForm((prev) => ({
+        ...prev,
+        name: cleanedName,
+      }));
+
+      return;
+    }
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
+
+  function handleBlur(event) {
+    const { name } = event.target;
+
+    setTouched((prev) => ({
+      ...prev,
+      [name]: true,
+    }));
+  }
+
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    if (!name || !phone || !address) {
-      alert("Please fill in all fields.");
+    const allTouched = {
+      name: true,
+      phone: true,
+      area: true,
+      notes: true,
+    };
+
+    setTouched(allTouched);
+
+    const currentErrors = validate(form);
+
+    if (Object.keys(currentErrors).length > 0) {
+      const firstField = Object.keys(currentErrors)[0];
+
+      refs[firstField]?.current?.focus();
+
       return;
     }
 
     if (items.length === 0) {
-      alert("Your cart is empty.");
+      setRequestError("Your cart is empty.");
       return;
     }
 
-    alert(`Order placed successfully!\nTotal: ${total} ETB`);
+    setSubmitting(true);
+    setRequestError("");
 
-    clear();
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    setName("");
-    setPhone("");
-    setAddress("");
+      const requestSucceeded = true;
 
-    navigate("/");
+      if (!requestSucceeded) {
+        throw new Error("TeleBirr payment failed. Please try again.");
+      }
+
+      alert("Order placed successfully!");
+
+      clear();
+
+      setForm({
+        name: "",
+        phone: "",
+        area: "",
+        notes: "",
+      });
+
+      navigate("/");
+    } catch (error) {
+      setRequestError(error.message);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -55,7 +167,7 @@ function Checkout() {
             {items.map((item, index) => (
               <div key={`${item.id}-${index}`} className="cart-item">
                 <span>
-                  {item.name} - {item.price} ETB
+                  {item.name} – {item.price} ETB
                 </span>
 
                 <button type="button" onClick={() => removeItem(item.id)}>
@@ -65,7 +177,7 @@ function Checkout() {
             ))}
 
             <div className="order-total">
-              <strong>Order Total:</strong>
+              <strong>Total:</strong>
               <strong>{total} ETB</strong>
             </div>
 
@@ -76,43 +188,122 @@ function Checkout() {
         )}
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
+        {requestError && (
+          <p role="alert" className="error">
+            {requestError}
+          </p>
+        )}
+
+        {/* FULL NAME */}
         <div>
           <label htmlFor="name">Full Name</label>
 
           <input
+            ref={nameRef}
             id="name"
+            name="name"
             type="text"
             placeholder="Enter your full name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+            value={form.name}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            aria-invalid={!!(touched.name && errors.name)}
+            aria-describedby="name-error"
           />
+
+          {touched.name && errors.name && (
+            <p id="name-error" role="alert" className="error">
+              {errors.name}
+            </p>
+          )}
         </div>
 
+        {/* PHONE */}
         <div>
-          <label htmlFor="phone">Phone Number</label>
+          <label htmlFor="phone">TeleBirr Phone</label>
 
           <input
+            ref={phoneRef}
             id="phone"
+            name="phone"
             type="tel"
             placeholder="09XXXXXXXX"
-            value={phone}
-            onChange={(event) => setPhone(event.target.value)}
+            value={form.phone}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            aria-invalid={!!(touched.phone && errors.phone)}
+            aria-describedby="phone-error"
           />
+
+          {touched.phone && errors.phone && (
+            <p id="phone-error" role="alert" className="error">
+              {errors.phone}
+            </p>
+          )}
         </div>
 
+        {/* DELIVERY AREA */}
         <div>
-          <label htmlFor="address">Delivery Address</label>
+          <label htmlFor="area">Delivery Area</label>
+
+          <select
+            ref={areaRef}
+            id="area"
+            name="area"
+            value={form.area}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            aria-invalid={!!(touched.area && errors.area)}
+            aria-describedby="area-error"
+          >
+            <option value="">Select your area</option>
+            <option value="Bole">Bole</option>
+            <option value="Kazanchis">Kazanchis</option>
+            <option value="Piassa">Piassa</option>
+            <option value="CMC">CMC</option>
+            <option value="Gerji">Gerji</option>
+            <option value="Mexico">Mexico</option>
+          </select>
+
+          {touched.area && errors.area && (
+            <p id="area-error" role="alert" className="error">
+              {errors.area}
+            </p>
+          )}
+        </div>
+
+        {/* NOTES */}
+        <div>
+          <label htmlFor="notes">Notes (Optional)</label>
 
           <textarea
-            id="address"
-            placeholder="Enter your delivery address"
-            value={address}
-            onChange={(event) => setAddress(event.target.value)}
+            ref={notesRef}
+            id="notes"
+            name="notes"
+            rows="3"
+            maxLength="150"
+            placeholder="Any special instructions?"
+            value={form.notes}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            aria-invalid={!!(touched.notes && errors.notes)}
+            aria-describedby="notes-error"
           />
+
+          <p>{form.notes.length}/150</p>
+
+          {touched.notes && errors.notes && (
+            <p id="notes-error" role="alert" className="error">
+              {errors.notes}
+            </p>
+          )}
         </div>
 
-        <button type="submit">Place Order</button>
+        {/* SUBMIT */}
+        <button type="submit" disabled={submitting || items.length === 0}>
+          {submitting ? "Submitting..." : `Pay ${total} ETB with TeleBirr`}
+        </button>
       </form>
     </section>
   );
