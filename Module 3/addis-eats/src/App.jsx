@@ -10,7 +10,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import DishDetail from "./pages/DishDetail";
-import Checkout from "./pages/checkout";
+import Checkout from "./pages/Checkout";
 import SignIn from "./pages/SignIn";
 import NotFound from "./pages/NotFound";
 
