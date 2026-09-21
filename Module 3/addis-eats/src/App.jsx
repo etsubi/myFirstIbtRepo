@@ -1,8 +1,11 @@
 import { Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
 
 import "./App.css";
 
 import Layout from "./components/Layout";
+import ErrorBoundary from "./components/ErrorBoundary";
+import LoadingSkeleton from "./components/LoadingSkeleton";
 
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -10,11 +13,12 @@ import { ThemeProvider } from "./context/ThemeContext";
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import DishDetail from "./pages/DishDetail";
-import Checkout from "./pages/Checkout";
 import SignIn from "./pages/SignIn";
 import NotFound from "./pages/NotFound";
 
 import RequireAuth from "./auth/RequireAuth";
+
+const Checkout = lazy(() => import("./pages/checkout"));
 
 function App() {
   return (
@@ -24,7 +28,14 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
 
-            <Route path="menu" element={<Menu />} />
+            <Route
+              path="menu"
+              element={
+                <ErrorBoundary>
+                  <Menu />
+                </ErrorBoundary>
+              }
+            />
 
             <Route path="menu/:id" element={<DishDetail />} />
 
@@ -34,7 +45,9 @@ function App() {
               path="checkout"
               element={
                 <RequireAuth>
-                  <Checkout />
+                  <Suspense fallback={<LoadingSkeleton />}>
+                    <Checkout />
+                  </Suspense>
                 </RequireAuth>
               }
             />

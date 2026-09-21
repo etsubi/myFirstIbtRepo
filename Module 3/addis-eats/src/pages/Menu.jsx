@@ -1,6 +1,9 @@
 import { useSearchParams } from "react-router-dom";
+import { useState, useRef } from "react";
+
 import CategoryBar from "../components/CategoryBar";
 import DishList from "../components/DishList";
+import DishModal from "../components/DishModal";
 
 const menu = [
   {
@@ -61,13 +64,22 @@ function Menu() {
 
   const selectedCategory = searchParams.get("category") || "All";
 
-  const handleCategoryChange = (category) => {
+  const [selectedDish, setSelectedDish] = useState(null);
+
+  const triggerRef = useRef(null);
+
+  function handleCategoryChange(category) {
     if (category === "All") {
       setSearchParams({});
     } else {
       setSearchParams({ category });
     }
-  };
+  }
+
+  function handleView(dish, ref) {
+    triggerRef.current = ref.current;
+    setSelectedDish(dish);
+  }
 
   return (
     <section className="menu-section">
@@ -79,7 +91,17 @@ function Menu() {
         onCategoryChange={handleCategoryChange}
       />
 
-      <DishList dishes={menu} selectedCategory={selectedCategory} />
+      <DishList
+        dishes={menu}
+        selectedCategory={selectedCategory}
+        onView={handleView}
+      />
+
+      <DishModal
+        dish={selectedDish}
+        onClose={() => setSelectedDish(null)}
+        triggerRef={triggerRef}
+      />
     </section>
   );
 }
