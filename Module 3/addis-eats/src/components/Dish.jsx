@@ -1,21 +1,22 @@
+import { memo, useRef } from "react";
 import useCartStore from "../store/cartStore";
 
-function Dish({ id, name, price, spicy, image }) {
+function Dish({ id, name, price, spicy, image, onView }) {
   const addItem = useCartStore((state) => state.addItem);
   const items = useCartStore((state) => state.items);
+
+  const triggerRef = useRef(null);
 
   const count = items.filter((item) => item.id === id).length;
 
   function handleAdd() {
-    const dish = {
+    addItem({
       id,
       name,
       price,
       spicy,
       image,
-    };
-
-    addItem(dish);
+    });
   }
 
   return (
@@ -25,18 +26,23 @@ function Dish({ id, name, price, spicy, image }) {
 
         <p>{price} ETB</p>
 
-        {spicy && <span className="spicy">🌶️ Spicy</span>}
+        {spicy && <span>🌶️ Spicy</span>}
       </div>
 
       <div className="dish-actions">
-        <span className="counter">Added: {count}</span>
+        <span>Added: {count}</span>
 
-        <button type="button" onClick={handleAdd}>
-          Add
+        <button onClick={handleAdd}>Add</button>
+
+        <button
+          ref={triggerRef}
+          onClick={() => onView({ id, name, price, image }, triggerRef)}
+        >
+          View
         </button>
       </div>
     </div>
   );
 }
 
-export default Dish;
+export default memo(Dish);
