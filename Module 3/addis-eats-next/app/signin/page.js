@@ -1,9 +1,10 @@
+
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function SignInPage() {
+function SignInForm() {
   const [email, setEmail] = useState("user@example.com");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -35,7 +36,9 @@ export default function SignInPage() {
 
       const next = searchParams.get("next");
       const destination =
-        next && next.startsWith("/") && !next.startsWith("//") ? next : "/";
+        next && next.startsWith("/") && !next.startsWith("//")
+          ? next
+          : "/";
 
       router.push(destination);
       router.refresh();
@@ -83,5 +86,13 @@ export default function SignInPage() {
 
       <p>Demo password: password123</p>
     </section>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<p>Loading sign-in form...</p>}>
+      <SignInForm />
+    </Suspense>
   );
 }
