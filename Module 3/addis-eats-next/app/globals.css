@@ -234,3 +234,52 @@ footer p {
     padding: 20px;
   }
 }
+
+/* Menu action buttons */
+.dish-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.dish-actions a,
+.dish-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 42px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Keep the View Dish link simple */
+.dish-actions a {
+  flex: 0 1 auto;
+}
+
+/* Add to Cart button */
+.dish-actions button {
+  flex: 0 1 auto;
+  white-space: normal;
+}
+
+/* Small-screen layout */
+@media (max-width: 480px) {
+  .dish-actions {
+    gap: 10px;
+  }
+
+  .dish-actions a,
+  .dish-actions button {
+    padding: 10px 12px;
+  }
+}

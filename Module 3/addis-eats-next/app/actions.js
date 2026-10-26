@@ -1,6 +1,6 @@
 "use server";
 
-export async function placeOrder(formData) {
+export async function placeOrder(previousState, formData) {
   const name = formData.get("name")?.trim();
   const phone = formData.get("phone")?.trim();
 
@@ -15,20 +15,18 @@ export async function placeOrder(formData) {
   }
 
   if (Object.keys(errors).length > 0) {
-    console.log("Validation errors:", errors);
-
     return {
       success: false,
       errors,
+      message: "Please correct the errors below.",
     };
   }
 
-  console.log("Order created:", {
-    name,
-    phone,
-  });
+  console.log("Order created:", { name, phone });
 
   return {
     success: true,
+    errors: {},
+    message: "Your order was submitted successfully!",
   };
 }
